@@ -1,0 +1,30 @@
+# ==============================================================================
+# Backend .gitignore
+# ==============================================================================
+
+# Dependencies
+node_modules/
+
+# Environment Variables & Secrets (Kredensial database, JWT, Midtrans)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs & Debugging
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
