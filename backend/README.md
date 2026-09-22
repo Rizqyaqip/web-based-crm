@@ -55,14 +55,14 @@ Menggunakan skema tabel `users` (`id`, `nama`, `password`, `role`):
 ---
 
 ### 3. Products (`/api/products`)
-Menggunakan skema tabel `products` (`id`, `nama_produk`, `kategori`, `gambar`, `harga`, `jumlahStok`):
+Menggunakan skema tabel `products` (`id`, `nama_produk`, `deskripsi`, `kategori`, `gambar`, `harga`, `jumlah_stok`):
 
 | Method | Endpoint | Keterangan | Contoh Request Body |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/products` | List produk (filter: `?kategori=Elektronik&search=laptop`) | - |
+| `GET` | `/api/products` | List produk (filter: `?kategori=frozen+food&search=dimsum`) | - |
 | `GET` | `/api/products/:id` | Detail produk | - |
-| `POST` | `/api/products` | Tambah produk baru | `{"nama_produk": "Mouse", "kategori": "Aksesoris", "harga": 75000, "jumlahStok": 20}` |
-| `PUT` | `/api/products/:id` | Update produk | `{"harga": 70000, "jumlahStok": 25}` |
+| `POST` | `/api/products` | Tambah produk baru | `{"nama_produk": "Edo Ebi Furai", "kategori": "frozen food", "harga": 40000, "jumlah_stok": 20}` |
+| `PUT` | `/api/products/:id` | Update produk | `{"harga": 38000, "jumlah_stok": 25}` |
 | `DELETE` | `/api/products/:id` | Hapus produk | - |
 
 ---

@@ -118,8 +118,9 @@ export const StockProductGrid = memo(function StockProductGrid({
         }}>
           {filteredProducts.map((prod) => {
             const isSelected = String(prod.id) === String(selectedProductId) && productMode === 'existing';
-            const isOutOfStock = prod.jumlahStok <= 0;
-            const isLowStock = prod.jumlahStok > 0 && prod.jumlahStok <= 5;
+            const stockCount = Number(prod.jumlah_stok !== undefined ? prod.jumlah_stok : prod.jumlahStok) || 0;
+            const isOutOfStock = stockCount <= 0;
+            const isLowStock = stockCount > 0 && stockCount <= 5;
 
             return (
               <div
@@ -136,52 +137,41 @@ export const StockProductGrid = memo(function StockProductGrid({
                 }}
               >
                 <div>
-                  {/* Thumbnail & Category Badges */}
-                  <div style={{
-                    position: 'relative',
-                    height: '140px',
-                    backgroundColor: '#ffffff',
-                    borderBottom: '1px solid var(--border-subtle)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden'
-                  }}>
+                  {/* Image Container with Badges */}
+                  <div style={{ position: 'relative', width: '100%', paddingTop: '58%', overflow: 'hidden', backgroundColor: 'var(--bg-tertiary)' }}>
                     <img
-                      src={prod.gambar || '/src/assets/ketsaiOriginal/dimsum.png'}
+                      src={prod.gambar || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'}
                       alt={prod.nama_produk}
+                      loading="lazy"
                       style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: 'contain',
-                        padding: '8px'
+                        objectFit: 'cover'
                       }}
                       onError={(e) => {
-                        if (!e.currentTarget.src.includes('/src/assets')) {
-                          e.currentTarget.src = `/src${prod.gambar}`;
-                        }
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
                       }}
                     />
-
-                    {/* Category Badge */}
-                    <span style={{
+                    <div style={{
                       position: 'absolute',
                       top: '10px',
                       left: '10px',
-                      backgroundColor: 'rgba(246, 241, 230, 0.95)',
+                      padding: '3px 8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.92)',
                       backdropFilter: 'blur(4px)',
-                      padding: '3px 9px',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '10px',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '11px',
                       fontWeight: 700,
                       color: 'var(--text-primary)',
-                      textTransform: 'uppercase',
-                      border: '1px solid var(--border-subtle)'
+                      boxShadow: 'var(--shadow-xs)'
                     }}>
                       {prod.kategori || 'Umum'}
-                    </span>
+                    </div>
 
-                    {/* Status Badge */}
                     <div style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
                       {isOutOfStock ? (
                         <span className="badge-status badge-danger" style={{ fontSize: '11px', fontWeight: 700 }}>
@@ -189,11 +179,11 @@ export const StockProductGrid = memo(function StockProductGrid({
                         </span>
                       ) : isLowStock ? (
                         <span className="badge-status badge-pending" style={{ fontSize: '11px', fontWeight: 700 }}>
-                          Menipis ({prod.jumlahStok})
+                          Menipis ({stockCount})
                         </span>
                       ) : (
                         <span className="badge-status badge-success" style={{ fontSize: '11px', fontWeight: 700 }}>
-                          Aman ({prod.jumlahStok})
+                          Aman ({stockCount})
                         </span>
                       )}
                     </div>
@@ -255,7 +245,7 @@ export const StockProductGrid = memo(function StockProductGrid({
                           ? 'var(--status-pending-text)'
                           : 'var(--status-success-text)'
                       }}>
-                        {prod.jumlahStok} <span style={{ fontSize: '12px', fontWeight: 600 }}>porsi</span>
+                        {stockCount} <span style={{ fontSize: '12px', fontWeight: 600 }}>porsi</span>
                       </span>
                     </div>
                   </div>

@@ -19,12 +19,16 @@ class DashboardRepository {
 
   async getLowStockItems(threshold = 5) {
     const [rows] = await pool.query(`
-      SELECT id, nama_produk, kategori, jumlahStok 
+      SELECT id, nama_produk, kategori, jumlah_stok 
       FROM products 
-      WHERE jumlahStok <= ?
-      ORDER BY jumlahStok ASC
+      WHERE jumlah_stok <= ?
+      ORDER BY jumlah_stok ASC
     `, [threshold]);
-    return rows;
+    return rows.map((r) => ({
+      ...r,
+      jumlah_stok: Number(r.jumlah_stok),
+      jumlahStok: Number(r.jumlah_stok)
+    }));
   }
 
   async getWeeklySales() {

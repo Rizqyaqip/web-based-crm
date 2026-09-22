@@ -44,8 +44,9 @@ class OrderService {
         }
 
         const qty = Math.max(1, Number(item.jumlah || item.quantity) || 1);
-        if (product.jumlahStok < qty) {
-          throw new BadRequestError(`Stok produk "${product.nama_produk}" tidak mencukupi (Tersisa: ${product.jumlahStok})`);
+        const availableStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
+        if (availableStock < qty) {
+          throw new BadRequestError(`Stok produk "${product.nama_produk}" tidak mencukupi (Tersisa: ${availableStock})`);
         }
 
         const itemTotal = product.harga * qty;

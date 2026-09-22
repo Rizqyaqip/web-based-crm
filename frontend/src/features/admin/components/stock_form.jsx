@@ -300,17 +300,22 @@ export const StockForm = memo(function StockForm({
                       </div>
                       <div style={{ textAlign: 'right' }}>
                         <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>Stok Saat Ini</span>
-                        <span style={{
-                          fontSize: '13px',
-                          fontWeight: 700,
-                          color: selectedProduct.jumlahStok <= 0
-                            ? 'var(--status-danger-text)'
-                            : selectedProduct.jumlahStok <= 5
-                            ? 'var(--status-pending-text)'
-                            : 'var(--status-success-text)'
-                        }}>
-                          {selectedProduct.jumlahStok} porsi
-                        </span>
+                        {(() => {
+                          const currStock = Number(selectedProduct.jumlah_stok !== undefined ? selectedProduct.jumlah_stok : selectedProduct.jumlahStok) || 0;
+                          return (
+                            <span style={{
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              color: currStock <= 0
+                                ? 'var(--status-danger-text)'
+                                : currStock <= 5
+                                ? 'var(--status-pending-text)'
+                                : 'var(--status-success-text)'
+                            }}>
+                              {currStock} porsi
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   )}
@@ -558,9 +563,11 @@ export const StockForm = memo(function StockForm({
             <span style={{ fontWeight: 700, color: 'var(--accent-vermilion)' }}>
               {productMode === 'new' || categoryMode === 'new' ? (
                 `Stok Awal Produk Baru: ${Number(quantityAdded) || 0} unit`
-              ) : (
-                `${selectedProduct?.jumlahStok || 0} + ${Number(quantityAdded) || 0} = ${(selectedProduct?.jumlahStok || 0) + (Number(quantityAdded) || 0)} porsi`
-              )}
+              ) : (() => {
+                const s = Number(selectedProduct?.jumlah_stok !== undefined ? selectedProduct.jumlah_stok : selectedProduct?.jumlahStok) || 0;
+                const q = Number(quantityAdded) || 0;
+                return `${s} + ${q} = ${s + q} porsi`;
+              })()}
             </span>
           </div>
         </div>

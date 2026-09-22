@@ -1,9 +1,19 @@
 const { pool } = require('../../database');
 
+const mapProduct = (row) => {
+  if (!row) return null;
+  const stok = Number(row.jumlah_stok !== undefined ? row.jumlah_stok : row.jumlahStok) || 0;
+  return {
+    ...row,
+    jumlah_stok: stok,
+    jumlahStok: stok // alias kompatibilitas
+  };
+};
+
 class ProductRepository {
   async findAll({ search, kategori, limit = 50 } = {}) {
     const maxLimit = Math.min(Number(limit) || 50, 100);
-    let sql = 'SELECT id, nama_produk, deskripsi, kategori, gambar, harga, jumlahStok FROM products';
+    let sql = 'SELECT id, nama_produk, deskripsi, kategori, gambar, harga, jumlah_stok FROM products';
     const conditions = [];
     const params = [];
 
@@ -25,15 +35,15 @@ class ProductRepository {
     params.push(maxLimit);
 
     const [rows] = await pool.query(sql, params);
-    return rows;
+    return rows.map(mapProduct);
   }
 
   async findById(id) {
     const [rows] = await pool.query(
-      'SELECT id, nama_produk, deskripsi, kategori, gambar, harga, jumlahStok FROM products WHERE id = ?',
+      'SELECT id, nama_produk, deskripsi, kategori, gambar, harga, jumlah_stok FROM products WHERE id = ?',
       [id]
     );
-    return rows[0] || null;
+    return mapProduct(rows[0]) || null;
   }
 
   async findBestSellers(limit = 6) {
@@ -46,17 +56,17 @@ class ProductRepository {
         p.kategori,
         p.gambar,
         p.harga,
-        p.jumlahStok,
+        p.jumlah_stok,
         COALESCE(SUM(oi.jumlah), 0) AS total_terjual
       FROM products p
       LEFT JOIN order_items oi ON p.id = oi.product_id
-      GROUP BY p.id, p.nama_produk, p.deskripsi, p.kategori, p.gambar, p.harga, p.jumlahStok
+      GROUP BY p.id, p.nama_produk, p.deskripsi, p.kategori, p.gambar, p.harga, p.jumlah_stok
       ORDER BY total_terjual DESC, p.id ASC
       LIMIT ?
     `, [maxLimit]);
 
     return rows.map((r) => ({
-      ...r,
+      ...mapProduct(r),
       total_terjual: Number(r.total_terjual)
     }));
   }
@@ -79,19 +89,20 @@ class ProductRepository {
     return ['Semua', ...rows.map((r) => r.kategori)];
   }
 
-  async create({ nama_produk, namaProduk, deskripsi, kategori, gambar, harga, jumlahStok } = {}) {
+  async create({ nama_produk, namaProduk, deskripsi, kategori, gambar, harga, jumlah_stok, jumlahStok } = {}) {
     const finalNama = (nama_produk || namaProduk || '').trim();
     const finalDeskripsi = deskripsi || null;
+    const finalStok = Number(jumlah_stok !== undefined ? jumlah_stok : jumlahStok) || 0;
 
     const [result] = await pool.query(
-      'INSERT INTO products (nama_produk, deskripsi, kategori, gambar, harga, jumlahStok) VALUES (?, ?, ?, ?, ?, ?)',
+      'INSERT INTO products (nama_produk, deskripsi, kategori, gambar, harga, jumlah_stok) VALUES (?, ?, ?, ?, ?, ?)',
       [
         finalNama,
         finalDeskripsi,
         kategori || 'Umum',
         gambar || null,
         Number(harga) || 0,
-        Number(jumlahStok) || 0
+        finalStok
       ]
     );
 
@@ -102,7 +113,8 @@ class ProductRepository {
       kategori: kategori || 'Umum',
       gambar: gambar || null,
       harga: Number(harga) || 0,
-      jumlahStok: Number(jumlahStok) || 0
+      jumlah_stok: finalStok,
+      jumlahStok: finalStok
     };
   }
 
@@ -131,9 +143,10 @@ class ProductRepository {
       updates.push('harga = ?');
       params.push(Number(fields.harga));
     }
-    if (fields.jumlahStok !== undefined) {
-      updates.push('jumlahStok = ?');
-      params.push(Number(fields.jumlahStok));
+    const stokInput = fields.jumlah_stok !== undefined ? fields.jumlah_stok : fields.jumlahStok;
+    if (stokInput !== undefined) {
+      updates.push('jumlah_stok = ?');
+      params.push(Number(stokInput));
     }
 
     if (updates.length === 0) return null;

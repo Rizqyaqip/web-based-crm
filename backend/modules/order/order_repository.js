@@ -12,10 +12,15 @@ class OrderRepository {
 
   async findProductForUpdate(conn, productId) {
     const [rows] = await conn.query(
-      'SELECT id, nama_produk, harga, jumlahStok FROM products WHERE id = ? FOR UPDATE',
+      'SELECT id, nama_produk, harga, jumlah_stok FROM products WHERE id = ? FOR UPDATE',
       [productId]
     );
-    return rows[0] || null;
+    if (!rows[0]) return null;
+    return {
+      ...rows[0],
+      jumlah_stok: Number(rows[0].jumlah_stok),
+      jumlahStok: Number(rows[0].jumlah_stok)
+    };
   }
 
   async insertOrder(conn, { userId, user_id, namaCustomer, nama_customer, noHp, no_hp, alamat, tanggalPesan, tanggal_pesan, status = 'Pending', totalHarga, total_harga }) {
@@ -47,7 +52,7 @@ class OrderRepository {
 
   async decreaseProductStock(conn, productId, jumlah) {
     await conn.query(
-      'UPDATE products SET jumlahStok = jumlahStok - ? WHERE id = ?',
+      'UPDATE products SET jumlah_stok = jumlah_stok - ? WHERE id = ?',
       [jumlah, productId]
     );
   }

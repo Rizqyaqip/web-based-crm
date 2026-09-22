@@ -7,14 +7,15 @@ import { useDebounce } from '../../hooks';
 // Kartu Produk Terisolasi (State Colocation & Memoized) agar pengubahan kuantitas tidak me-re-render seluruh katalog
 const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCart }) {
   const [qty, setQty] = useState(1);
-  const isOutOfStock = product.jumlahStok <= 0;
-  const isLowStock = product.jumlahStok > 0 && product.jumlahStok < 15;
+  const currentStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
+  const isOutOfStock = currentStock <= 0;
+  const isLowStock = currentStock > 0 && currentStock < 15;
   const isKetsaiOriginal =
     product.kategori?.toLowerCase().includes('ketsai') ||
     product.gambar?.includes('ketsaiOriginal');
 
   const handleMinus = () => setQty((prev) => Math.max(1, prev - 1));
-  const handlePlus = () => setQty((prev) => Math.min(product.jumlahStok, prev + 1));
+  const handlePlus = () => setQty((prev) => Math.min(currentStock, prev + 1));
   const handleAdd = () => onAddToCart(product, qty);
 
   return (
@@ -166,11 +167,11 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
               </span>
               <button
                 onClick={handlePlus}
-                disabled={qty >= product.jumlahStok}
+                disabled={qty >= currentStock}
                 style={{
                   padding: '4px',
-                  color: qty >= product.jumlahStok ? '#ccc' : 'var(--text-primary)',
-                  cursor: qty >= product.jumlahStok ? 'not-allowed' : 'pointer'
+                  color: qty >= currentStock ? '#ccc' : 'var(--text-primary)',
+                  cursor: qty >= currentStock ? 'not-allowed' : 'pointer'
                 }}
                 title="Tambah"
               >

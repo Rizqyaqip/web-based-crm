@@ -27,7 +27,7 @@ class StockService {
         throw new NotFoundError('Produk tidak ditemukan');
       }
 
-      const currentStock = product.jumlahStok;
+      const currentStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
       const newStock = currentStock + qty;
 
       await stockRepository.updateProductStock(conn, finalProductId, newStock);

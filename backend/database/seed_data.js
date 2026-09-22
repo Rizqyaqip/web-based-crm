@@ -246,7 +246,14 @@ async function seedDatabaseDefaults(pool) {
       await pool.query('ALTER TABLE products ADD COLUMN deskripsi TEXT NULL AFTER nama_produk');
     }
 
-    // 2. Pastikan pengguna default (Admin, Staff, Guest)
+    // 2. Standarisasi nama field ke snake_case: ubah jumlahStok menjadi jumlah_stok jika masih ada
+    const [camelCols] = await pool.query("SHOW COLUMNS FROM products LIKE 'jumlahStok'");
+    if (camelCols.length > 0) {
+      console.log('[MIGRATION] Menyeragamkan field products.jumlahStok menjadi products.jumlah_stok (snake_case)...');
+      await pool.query('ALTER TABLE products CHANGE COLUMN jumlahStok jumlah_stok INT NOT NULL DEFAULT 0');
+    }
+
+    // 3. Pastikan pengguna default (Admin, Staff, Guest)
     const [userRows] = await pool.query('SELECT COUNT(*) as count FROM users');
     if (userRows[0].count === 0) {
       console.log('[SEED] Menyiapkan data awal pengguna (Admin, Staff, Guest)...');
@@ -263,13 +270,13 @@ async function seedDatabaseDefaults(pool) {
       }
     }
 
-    // 3. Pastikan produk kuliner Ketsai tersedia
+    // 4. Pastikan produk kuliner Ketsai tersedia
     const [prodRows] = await pool.query('SELECT COUNT(*) as count FROM products');
     if (prodRows[0].count === 0) {
       console.log('[SEED] Menyiapkan 29 data menu kuliner otentik Ketsai...');
       for (const item of initialProducts) {
         await pool.query(
-          'INSERT INTO products (nama_produk, deskripsi, kategori, gambar, harga, jumlahStok) VALUES (?, ?, ?, ?, ?, ?)',
+          'INSERT INTO products (nama_produk, deskripsi, kategori, gambar, harga, jumlah_stok) VALUES (?, ?, ?, ?, ?, ?)',
           item
         );
       }

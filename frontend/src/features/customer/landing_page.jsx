@@ -292,7 +292,8 @@ export function LandingPage({ setPage }) {
             gap: '24px'
           }}>
             {bestSellers.map((item, index) => {
-              const isOutOfStock = item.jumlahStok <= 0;
+              const stockAvailable = Number(item.jumlah_stok !== undefined ? item.jumlah_stok : item.jumlahStok) || 0;
+              const isOutOfStock = stockAvailable <= 0;
 
               const isItemKetsai = item.kategori?.toLowerCase().includes('ketsai') || item.gambar?.includes('ketsaiOriginal');
 
@@ -403,7 +404,7 @@ export function LandingPage({ setPage }) {
                       {isOutOfStock ? (
                         <span style={{ color: 'var(--accent-vermilion)', fontWeight: 600 }}>Stok Habis</span>
                       ) : (
-                        <span>Stok tersedia: <strong>{item.jumlahStok}</strong> porsi</span>
+                        <span>Stok tersedia: <strong>{stockAvailable}</strong> porsi</span>
                       )}
                     </div>
 

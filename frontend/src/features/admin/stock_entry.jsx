@@ -247,10 +247,11 @@ export function StockEntry({ setPage }) {
         filterCategory === 'Semua' ||
         (item.kategori || '').toLowerCase() === filterCategory.toLowerCase();
 
+      const stockCount = Number(item.jumlah_stok !== undefined ? item.jumlah_stok : item.jumlahStok) || 0;
       let matchStock = true;
-      if (stockLevelFilter === 'safe') matchStock = item.jumlahStok > 5;
-      else if (stockLevelFilter === 'low') matchStock = item.jumlahStok > 0 && item.jumlahStok <= 5;
-      else if (stockLevelFilter === 'out') matchStock = item.jumlahStok <= 0;
+      if (stockLevelFilter === 'safe') matchStock = stockCount > 5;
+      else if (stockLevelFilter === 'low') matchStock = stockCount > 0 && stockCount <= 5;
+      else if (stockLevelFilter === 'out') matchStock = stockCount <= 0;
 
       return matchSearch && matchCategory && matchStock;
     });
@@ -259,9 +260,12 @@ export function StockEntry({ setPage }) {
   // Statistik Stok
   const stats = useMemo(() => {
     const total = products.length;
-    const outOfStock = products.filter((p) => p.jumlahStok <= 0).length;
-    const lowStock = products.filter((p) => p.jumlahStok > 0 && p.jumlahStok <= 5).length;
-    const safeStock = products.filter((p) => p.jumlahStok > 5).length;
+    const outOfStock = products.filter((p) => (Number(p.jumlah_stok !== undefined ? p.jumlah_stok : p.jumlahStok) || 0) <= 0).length;
+    const lowStock = products.filter((p) => {
+      const s = Number(p.jumlah_stok !== undefined ? p.jumlah_stok : p.jumlahStok) || 0;
+      return s > 0 && s <= 5;
+    }).length;
+    const safeStock = products.filter((p) => (Number(p.jumlah_stok !== undefined ? p.jumlah_stok : p.jumlahStok) || 0) > 5).length;
     return { total, outOfStock, lowStock, safeStock };
   }, [products]);
 
@@ -294,7 +298,8 @@ export function StockEntry({ setPage }) {
   };
 
   const handleSaveProductEdit = async (editPayload) => {
-    const { id, nama_produk, kategori, harga, jumlahStok, deskripsi, currentGambar, newImageFile } = editPayload;
+    const { id, nama_produk, kategori, harga, jumlah_stok, jumlahStok, deskripsi, currentGambar, newImageFile } = editPayload;
+    const finalStock = Number(jumlah_stok !== undefined ? jumlah_stok : jumlahStok) || 0;
     let finalImagePath = currentGambar;
 
     if (newImageFile) {
@@ -310,7 +315,8 @@ export function StockEntry({ setPage }) {
       nama_produk,
       kategori,
       harga,
-      jumlahStok,
+      jumlah_stok: finalStock,
+      jumlahStok: finalStock,
       deskripsi,
       gambar: finalImagePath
     });
@@ -436,6 +442,7 @@ export function StockEntry({ setPage }) {
           deskripsi: newProductData.deskripsi?.trim() || null,
           gambar: finalGambar,
           kategori: finalCategory,
+          jumlah_stok: 0,
           jumlahStok: 0
         });
 

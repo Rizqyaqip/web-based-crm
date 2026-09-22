@@ -26,6 +26,7 @@ export function EditProductModal({
     kategori: '',
     customKategori: '',
     harga: 0,
+    jumlah_stok: 0,
     jumlahStok: 0,
     deskripsi: '',
     gambar: ''
@@ -41,12 +42,14 @@ export function EditProductModal({
 
   useEffect(() => {
     if (product) {
+      const initStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
       setFormData({
         nama_produk: product.nama_produk || '',
         kategori: product.kategori || 'ketsai original',
         customKategori: '',
         harga: product.harga || 0,
-        jumlahStok: product.jumlahStok || 0,
+        jumlah_stok: initStock,
+        jumlahStok: initStock,
         deskripsi: product.deskripsi || '',
         gambar: product.gambar || ''
       });
@@ -88,7 +91,8 @@ export function EditProductModal({
       return;
     }
 
-    if (Number(formData.jumlahStok) < 0 || isNaN(Number(formData.jumlahStok))) {
+    const currentInputStock = formData.jumlah_stok !== undefined ? formData.jumlah_stok : formData.jumlahStok;
+    if (Number(currentInputStock) < 0 || isNaN(Number(currentInputStock))) {
       setErrorMessage('Jumlah stok harus angka valid non-negatif.');
       return;
     }
@@ -99,12 +103,14 @@ export function EditProductModal({
 
     try {
       setIsSaving(true);
+      const stockNumber = Number(currentInputStock);
       await onSave({
         id: product.id,
         nama_produk: nama,
         kategori: finalCategory,
         harga: Number(formData.harga),
-        jumlahStok: Number(formData.jumlahStok),
+        jumlah_stok: stockNumber,
+        jumlahStok: stockNumber,
         deskripsi: formData.deskripsi.trim(),
         currentGambar: formData.gambar,
         newImageFile
@@ -258,8 +264,8 @@ export function EditProductModal({
               <Input
                 type="number"
                 min="0"
-                value={formData.jumlahStok}
-                onChange={(e) => setFormData({ ...formData, jumlahStok: e.target.value })}
+                value={formData.jumlah_stok !== undefined ? formData.jumlah_stok : formData.jumlahStok}
+                onChange={(e) => setFormData({ ...formData, jumlah_stok: e.target.value, jumlahStok: e.target.value })}
                 required
               />
             </FormField>

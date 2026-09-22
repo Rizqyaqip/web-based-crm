@@ -65,3 +65,8 @@ lerna-debug.log*
 .temp/
 tmp/
 temp/
+
+# Berkas Dokumentasi & Konfigurasi Git (Abaikan pelacakan git)
+DOCUMENTATION.md
+documentation.md
+.gitignore

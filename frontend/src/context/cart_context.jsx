@@ -33,15 +33,16 @@ export function CartProvider({ children }) {
 
   const addToCart = useCallback((product, quantity = 1) => {
     setCartItems((prev) => {
+      const maxStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
       const existingIndex = prev.findIndex((item) => item.id === product.id);
       if (existingIndex > -1) {
         const updated = [...prev];
         const currentQty = updated[existingIndex].quantity;
-        const newQty = Math.min(product.jumlahStok, currentQty + quantity);
-        updated[existingIndex] = { ...updated[existingIndex], quantity: newQty };
+        const newQty = Math.min(maxStock, currentQty + quantity);
+        updated[existingIndex] = { ...updated[existingIndex], ...product, quantity: newQty, jumlah_stok: maxStock, jumlahStok: maxStock };
         return updated;
       }
-      return [...prev, { ...product, quantity: Math.min(product.jumlahStok, quantity) }];
+      return [...prev, { ...product, quantity: Math.min(maxStock, quantity), jumlah_stok: maxStock, jumlahStok: maxStock }];
     });
     setIsCartOpen(true);
   }, []);
@@ -51,10 +52,11 @@ export function CartProvider({ children }) {
       prev
         .map((item) => {
           if (item.id === productId) {
+            const maxStock = Number(item.jumlah_stok !== undefined ? item.jumlah_stok : item.jumlahStok) || 0;
             const nextQty = item.quantity + delta;
             if (nextQty <= 0) return null;
-            if (nextQty > item.jumlahStok) return item;
-            return { ...item, quantity: nextQty };
+            if (nextQty > maxStock) return item;
+            return { ...item, quantity: nextQty, jumlah_stok: maxStock, jumlahStok: maxStock };
           }
           return item;
         })

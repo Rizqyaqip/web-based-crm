@@ -182,8 +182,8 @@ export function CartDrawer() {
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, 1)}
-                        disabled={item.quantity >= item.jumlahStok}
-                        style={{ padding: '3px', color: item.quantity >= item.jumlahStok ? '#ccc' : 'var(--text-primary)' }}
+                        disabled={item.quantity >= (item.jumlah_stok !== undefined ? item.jumlah_stok : item.jumlahStok)}
+                        style={{ padding: '3px', color: item.quantity >= (item.jumlah_stok !== undefined ? item.jumlah_stok : item.jumlahStok) ? '#ccc' : 'var(--text-primary)' }}
                       >
                         <Plus size={13} />
                       </button>
