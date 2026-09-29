@@ -1,11 +1,9 @@
 const userRoles = {
   admin: 'admin',
   staff: 'staff',
-  customer: 'customer',
 
   ADMIN: 'admin',
-  STAFF: 'staff',
-  CUSTOMER: 'customer'
+  STAFF: 'staff'
 };
 
 const orderStatus = {

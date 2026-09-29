@@ -16,7 +16,7 @@ import { useAuth } from '../context/auth_context';
 import { ROUTE_PATHS } from '../routes/route_paths';
 import { Logo } from '../components';
 
-export function AdminLayout({ currentPage, setPage, title, subtitle, children }) {
+export function UserLayout({ currentPage, setPage, title, subtitle, children }) {
   const { user, logout, isAdmin } = useAuth();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -33,27 +33,28 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
 
   const navItems = [
     {
-      path: ROUTE_PATHS.ADMIN_DASHBOARD,
+      path: ROUTE_PATHS.USER_DASHBOARD,
       label: 'Dashboard',
       icon: LayoutDashboard
     },
     {
-      path: ROUTE_PATHS.ADMIN_STOCK_ENTRY,
+      path: ROUTE_PATHS.USER_STOCK_ENTRY,
       label: 'Input Stok',
       icon: PackagePlus
     },
     {
-      path: ROUTE_PATHS.ADMIN_STOCK_LOGS,
+      path: ROUTE_PATHS.USER_STOCK_LOGS,
       label: 'Riwayat Stok',
       icon: History
     },
     {
-      path: ROUTE_PATHS.ADMIN_ORDERS,
+      path: ROUTE_PATHS.USER_ORDERS,
       label: 'Riwayat Pesanan',
       icon: ShoppingBag
     }
   ];
 
+  // Menu Khusus Administrator (Kelola Staf)
   if (isAdmin) {
     navItems.push({
       path: ROUTE_PATHS.ADMIN_STAFF,
@@ -73,7 +74,7 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
       )}
 
       {/* Sidebar Navigation */}
-      <aside className={`admin-sidebar ${isMobileSidebarOpen ? 'open' : ''}`}>
+      <aside className={`user-sidebar admin-sidebar ${isMobileSidebarOpen ? 'open' : ''}`}>
         {/* Brand Header with Mobile Close Button */}
         <div style={{
           padding: '20px 20px',
@@ -143,7 +144,7 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
         <nav style={{ padding: '16px 12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPage === item.path;
+            const isActive = currentPage === item.path || (item.path === ROUTE_PATHS.USER_DASHBOARD && currentPage === 'admin-dashboard');
             return (
               <button
                 key={item.path}
@@ -220,7 +221,7 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Top Header */}
         <header
-          className="admin-header-responsive"
+          className="user-header-responsive admin-header-responsive"
           style={{
             padding: '20px 32px',
             backgroundColor: 'var(--bg-primary)',
@@ -263,7 +264,7 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
         </header>
 
         {/* Page Content */}
-        <main className="admin-main-responsive" style={{ padding: '28px 32px', flex: 1, overflowY: 'auto' }}>
+        <main className="user-main-responsive admin-main-responsive" style={{ padding: '28px 32px', flex: 1, overflowY: 'auto' }}>
           {children}
         </main>
       </div>
@@ -271,5 +272,6 @@ export function AdminLayout({ currentPage, setPage, title, subtitle, children })
   );
 }
 
-export default AdminLayout;
-
+// Aliases for compatibility
+export const AdminLayout = UserLayout;
+export default UserLayout;

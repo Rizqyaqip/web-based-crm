@@ -65,7 +65,14 @@ class AuthService {
 
   async deleteUser(id) {
     await this.getUserById(id); // Memastikan ada
-    await authRepository.deleteUserById(id);
+    try {
+      await authRepository.deleteUserById(id);
+    } catch (err) {
+      if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+        throw new BadRequestError('Akun staf ini tidak dapat dihapus karena telah memiliki riwayat pesanan atau log mutasi stok.');
+      }
+      throw err;
+    }
     return { id, deleted: true };
   }
 

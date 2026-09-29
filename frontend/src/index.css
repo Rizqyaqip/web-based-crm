@@ -433,7 +433,8 @@ button {
   }
 }
 
-/* Admin Layout Responsive */
+/* User & Portal Layout Responsive */
+.user-sidebar,
 .admin-sidebar {
   width: 260px;
   background-color: var(--bg-primary);
@@ -448,6 +449,7 @@ button {
 }
 
 @media (max-width: 768px) {
+  .user-sidebar,
   .admin-sidebar {
     position: fixed !important;
     top: 0 !important;
@@ -458,12 +460,15 @@ button {
     transform: translateX(-100%);
     box-shadow: var(--shadow-modal);
   }
+  .user-sidebar.open,
   .admin-sidebar.open {
     transform: translateX(0) !important;
   }
+  .user-header-responsive,
   .admin-header-responsive {
     padding: 14px 16px !important;
   }
+  .user-main-responsive,
   .admin-main-responsive {
     padding: 16px 14px !important;
   }

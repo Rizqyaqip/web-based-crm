@@ -162,11 +162,6 @@ class ProductRepository {
     } catch (e) {
       // Abaikan jika tabel/relasi tidak ada
     }
-    try {
-      await pool.query('DELETE FROM order_items WHERE product_id = ?', [id]);
-    } catch (e) {
-      // Abaikan jika tabel/relasi tidak ada
-    }
     const [result] = await pool.query('DELETE FROM products WHERE id = ?', [id]);
     return result.affectedRows > 0;
   }

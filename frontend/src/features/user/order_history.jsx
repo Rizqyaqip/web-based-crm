@@ -204,13 +204,13 @@ export function OrderHistory() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await updateOrderStatus(orderId, newStatus);
+      await updateOrderStatus(orderId, newStatus, user);
       // Refresh state
       setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus, staff_nama: user?.nama || o.staff_nama } : o))
       );
       if (selectedOrder && selectedOrder.id === orderId) {
-        setSelectedOrder({ ...selectedOrder, status: newStatus });
+        setSelectedOrder({ ...selectedOrder, status: newStatus, staff_nama: user?.nama || selectedOrder.staff_nama });
       }
     } catch (err) {
       alert('Gagal memperbarui status: ' + err.message);
@@ -447,6 +447,11 @@ export function OrderHistory() {
                         <span className={`badge-status ${getStatusBadgeClass(order.status)}`}>
                           {order.status}
                         </span>
+                        {order.staff_nama && (
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginTop: '3px' }}>
+                            Oleh: {order.staff_nama}
+                          </span>
+                        )}
                       </td>
                       <td 
                         style={{ padding: '14px', textAlign: 'right' }}
@@ -565,6 +570,17 @@ export function OrderHistory() {
                 <span className={`badge-status ${getStatusBadgeClass(selectedOrder.status)}`} style={{ fontSize: '11px', marginTop: '4px' }}>
                   {selectedOrder.status}
                 </span>
+              </div>
+
+              <div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>STAF PENGELOLA</span>
+                <p style={{ margin: '2px 0 0', fontWeight: 600 }}>
+                  {selectedOrder.staff_nama ? (
+                    <span style={{ color: 'var(--accent-vermilion)' }}>{selectedOrder.staff_nama}</span>
+                  ) : (
+                    <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Belum Ditugaskan</span>
+                  )}
+                </p>
               </div>
             </div>
 

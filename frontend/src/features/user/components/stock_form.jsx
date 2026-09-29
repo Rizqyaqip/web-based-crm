@@ -90,7 +90,7 @@ export const StockForm = memo(function StockForm({
             {statusFeedback.type === 'success' && (
               <button
                 type="button"
-                onClick={() => setPage('admin-stock-logs')}
+                onClick={() => setPage('user-stock-logs')}
                 style={{ fontSize: '11px', fontWeight: 700, textDecoration: 'underline', marginTop: '4px', display: 'inline-block' }}
               >
                 Buka Riwayat Mutasi Lengkap →

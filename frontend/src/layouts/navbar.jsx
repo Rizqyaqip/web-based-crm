@@ -3,6 +3,7 @@ import { ShoppingBag, User, ArrowRight, Menu, X } from 'lucide-react';
 import { useCart } from '../context/cart_context';
 import { useAuth } from '../context/auth_context';
 import { Logo } from '../components';
+import { ROUTE_PATHS } from '../routes/route_paths';
 
 export function Navbar({ currentPage, setPage }) {
   const { totalItems, setIsCartOpen } = useCart();
@@ -104,7 +105,7 @@ export function Navbar({ currentPage, setPage }) {
           <div className="hide-on-mobile">
             {isAuthenticated ? (
               <button
-                onClick={() => handleNavigate('admin-dashboard')}
+                onClick={() => handleNavigate(ROUTE_PATHS.USER_DASHBOARD)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -222,7 +223,7 @@ export function Navbar({ currentPage, setPage }) {
 
           {isAuthenticated ? (
             <button
-              onClick={() => handleNavigate('admin-dashboard')}
+              onClick={() => handleNavigate(ROUTE_PATHS.USER_DASHBOARD)}
               style={{
                 display: 'flex',
                 alignItems: 'center',

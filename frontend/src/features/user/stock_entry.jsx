@@ -526,7 +526,7 @@ export function StockEntry({ setPage }) {
         </div>
 
         <button
-          onClick={() => setPage('admin-stock-logs')}
+          onClick={() => setPage('user-stock-logs')}
           className="zen-btn-secondary"
           style={{ padding: '8px 16px', fontSize: '13px' }}
         >

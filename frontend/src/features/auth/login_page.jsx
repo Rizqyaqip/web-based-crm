@@ -23,7 +23,7 @@ export function LoginPage({ setPage }) {
     try {
       setIsLoading(true);
       await login(username.trim(), password);
-      setPage(ROUTE_PATHS.ADMIN_DASHBOARD);
+      setPage(ROUTE_PATHS.USER_DASHBOARD);
     } catch (err) {
       setErrorMsg(err.message || 'Username atau password tidak sesuai.');
     } finally {

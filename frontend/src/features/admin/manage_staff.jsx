@@ -44,9 +44,7 @@ export function ManageStaff({ setPage }) {
       setLoading(true);
       const res = await getStaffList();
       if (res.success && res.data) {
-        // Filter agar akun 'customer' (guest) tidak membingungkan daftar staf
-        const internalUsers = res.data.filter((u) => u.role === 'admin' || u.role === 'staff');
-        setStaffList(internalUsers);
+        setStaffList(res.data);
       }
     } catch (err) {
       console.error('Failed to load staff list:', err);

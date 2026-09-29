@@ -10,6 +10,7 @@ class OrderService {
     const alamat = payload.alamat;
     const metodePembayaran = payload.metode_pembayaran || payload.metodePembayaran || 'Midtrans Snap';
     const items = payload.items;
+    const userId = payload.user_id !== undefined ? payload.user_id : (payload.userId !== undefined ? payload.userId : null);
 
     // 1. Validasi data checkout
     if (!namaCustomer || !noHp || !alamat) {
@@ -66,7 +67,7 @@ class OrderService {
       const initialStatus = (orderStatus && orderStatus.pending) || ORDER_STATUS.PENDING || 'Pending';
 
       const orderId = await orderRepository.insertOrder(conn, {
-        userId: guestUserId,
+        userId: userId || null,
         namaCustomer: namaCustomer.trim(),
         noHp: noHp.trim(),
         alamat: alamat.trim(),
@@ -192,7 +193,7 @@ class OrderService {
     return order;
   }
 
-  async updateStatus(id, status) {
+  async updateStatus(id, status, staffId = null) {
     const validStatuses = Object.values(ORDER_STATUS || orderStatus);
     if (!status || !validStatuses.includes(status)) {
       throw new BadRequestError(`Status tidak valid. Pilihan status yang tersedia: ${validStatuses.join(', ')}`);
@@ -203,18 +204,26 @@ class OrderService {
       throw new NotFoundError(`Pesanan ID ${id} tidak ditemukan`);
     }
 
-    await orderRepository.updateOrderStatus(id, status);
+    await orderRepository.updateOrderStatus(id, status, staffId);
 
     const completedStatus = (orderStatus && orderStatus.completed) || ORDER_STATUS.COMPLETED || 'Selesai';
     if (status === completedStatus) {
       await orderRepository.updatePaymentStatusByOrderId(id, 'Lunas');
     }
 
+    const updated = await orderRepository.findOrderById(id);
+
     return {
       orderId: Number(id),
       order_id: Number(id),
-      status
+      status,
+      user_id: updated?.user_id || null,
+      staff_nama: updated?.staff_nama || null
     };
+  }
+
+  async findUserIdByName(name) {
+    return await orderRepository.findUserIdByName(name);
   }
 
   async processMidtransWebhook(payload = {}) {
@@ -302,6 +311,53 @@ class OrderService {
     };
   }
 
+  async checkOrderPaymentStatus(orderId) {
+    const order = await this.getOrderById(orderId);
+    if (!order) {
+      throw new NotFoundError(`Pesanan ID ${orderId} tidak ditemukan`);
+    }
+
+    if (order.status_pembayaran === 'Lunas') {
+      return order;
+    }
+
+    // Periksa status ke Midtrans API
+    const candidates = [
+      order.midtrans_order_id,
+      `KETSAI-${orderId}`,
+      String(orderId)
+    ].filter(Boolean);
+
+    let statusResponse = null;
+    for (const cand of candidates) {
+      statusResponse = await midtransService.getTransactionStatus(cand);
+      if (statusResponse && statusResponse.transaction_status) {
+        break;
+      }
+    }
+
+    if (statusResponse && statusResponse.transaction_status) {
+      const { transaction_status, fraud_status, payment_type } = statusResponse;
+      const { paymentStatus } = midtransService.mapTransactionStatus(
+        transaction_status,
+        fraud_status
+      );
+
+      if (paymentStatus === 'Lunas') {
+        await orderRepository.updatePaymentStatusByOrderId(orderId, 'Lunas');
+        await orderRepository.updateOrderStatus(orderId, 'Diproses');
+      } else if (paymentStatus) {
+        await orderRepository.updatePaymentStatusByOrderId(orderId, paymentStatus);
+      }
+
+      if (payment_type) {
+        const channelLabel = `Midtrans (${payment_type.toUpperCase()})`;
+        await orderRepository.updatePaymentMethodByOrderId(orderId, channelLabel);
+      }
+    }
+
+    return await this.getOrderById(orderId);
+  }
 }
 
 module.exports = new OrderService();

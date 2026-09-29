@@ -31,7 +31,7 @@ class ProductController {
   }
 
   async ensureCategoryDir(req, res) {
-    const { kategori } = req.body;
+    const kategori = req.body.kategori || req.body.category;
     if (!kategori || typeof kategori !== 'string') {
       throw new BadRequestError('Nama kategori wajib diisi.');
     }

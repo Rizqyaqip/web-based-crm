@@ -9,15 +9,20 @@ import {
   ArrowLeft,
   ExternalLink,
   ShieldCheck,
-  MessageCircle
+  MessageCircle,
+  RefreshCw,
+  UserCheck,
+  Sparkles
 } from 'lucide-react';
 import { useCart } from '../../context/cart_context';
-import { formatIDR, formatDate, formatMidtransPaymentMethod, updateOrderPayment, getOrderById } from '../../services/api';
+import { formatIDR, formatDate, formatMidtransPaymentMethod, updateOrderPayment, getOrderById, checkOrderPaymentStatus } from '../../services/api';
 import { Logo } from '../../components';
 
 export function InvoiceView({ setPage }) {
   const { latestOrder, recordCheckoutSuccess } = useCart();
   const [order, setOrder] = useState(latestOrder);
+  const [checkingPayment, setCheckingPayment] = useState(false);
+  const [checkFeedback, setCheckFeedback] = useState(null);
 
   useEffect(() => {
     let currentOrder = order;
@@ -34,20 +39,68 @@ export function InvoiceView({ setPage }) {
     }
 
     const orderId = currentOrder?.order_id || currentOrder?.id || currentOrder?.orderId;
-    if (orderId) {
-      getOrderById(orderId)
-        .then((res) => {
-          if (res.success && res.data) {
-            setOrder((prev) => ({
+    if (!orderId) return;
+
+    // Polling function untuk auto-update status pesanan secara real-time
+    const syncLatestOrder = async () => {
+      try {
+        const res = await getOrderById(orderId);
+        if (res.success && res.data) {
+          setOrder((prev) => {
+            const updated = {
               ...prev,
               ...res.data,
               items: (res.data.items && res.data.items.length > 0) ? res.data.items : (prev?.items || [])
-            }));
-          }
-        })
-        .catch(() => {});
-    }
+            };
+            try {
+              sessionStorage.setItem('ketsai_last_order', JSON.stringify(updated));
+            } catch {
+              // ignore
+            }
+            return updated;
+          });
+        }
+      } catch {
+        // silent polling catch
+      }
+    };
+
+    // Panggil segera saat halaman dimuat
+    syncLatestOrder();
+
+    // Auto-update berkala setiap 3.5 detik agar perubahan dari staf langsung tampil
+    const intervalId = setInterval(syncLatestOrder, 3500);
+    return () => clearInterval(intervalId);
   }, []);
+
+  const handleCheckPaymentStatus = async () => {
+    const orderId = order?.order_id || order?.id || order?.orderId;
+    if (!orderId) return;
+    try {
+      setCheckingPayment(true);
+      setCheckFeedback(null);
+      const res = await checkOrderPaymentStatus(orderId);
+      if (res.success && res.data) {
+        const updated = {
+          ...order,
+          ...res.data,
+          items: (res.data.items && res.data.items.length > 0) ? res.data.items : (order?.items || [])
+        };
+        setOrder(updated);
+        recordCheckoutSuccess(updated);
+
+        if (res.data.status_pembayaran === 'Lunas') {
+          setCheckFeedback({ type: 'success', text: 'Pembayaran terkonfirmasi Lunas! Pesanan sedang diproses.' });
+        } else {
+          setCheckFeedback({ type: 'info', text: 'Status pembayaran belum terverifikasi lunas. Silakan selesaikan transaksi.' });
+        }
+      }
+    } catch (err) {
+      setCheckFeedback({ type: 'error', text: err.message || 'Gagal mengecek status pembayaran' });
+    } finally {
+      setCheckingPayment(false);
+    }
+  };
 
   const handlePayNow = () => {
     const snapToken = order?.snap_token || order?.snapToken;
@@ -272,7 +325,7 @@ export function InvoiceView({ setPage }) {
               <span>{order.status_pembayaran || 'Menunggu Pembayaran'}</span>
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              Status Pesanan: <strong>{order.status_pesanan || order.status || 'Pending'}</strong>
+              Status Pesanan: <strong>{isPaid ? (order.status === 'Pending' ? 'Diproses' : (order.status || 'Diproses')) : (order.status || 'Pending')}</strong>
             </div>
           </div>
         </div>
@@ -282,7 +335,7 @@ export function InvoiceView({ setPage }) {
           padding: 'clamp(14px, 3vw, 18px) clamp(16px, 4vw, 24px)',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))',
           gap: '16px',
           backgroundColor: 'var(--bg-surface)'
         }}>
@@ -308,6 +361,24 @@ export function InvoiceView({ setPage }) {
             <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <CreditCard size={15} color="var(--accent-vermilion)" />
               <span>{displayPaymentMethod}</span>
+            </div>
+          </div>
+
+          <div>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.5px' }}>
+              Staf Pengelola
+            </span>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {order.staff_nama ? (
+                <>
+                  <UserCheck size={16} color="#2e7d32" />
+                  <span style={{ color: '#2e7d32' }}>{order.staff_nama}</span>
+                </>
+              ) : (
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic', fontWeight: 500 }}>
+                  Menunggu penugasan staf
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -393,7 +464,7 @@ export function InvoiceView({ setPage }) {
           {!isPaid && (
             <div className="no-print" style={{
               marginTop: '18px',
-              padding: '14px 18px',
+              padding: '16px 20px',
               borderRadius: 'var(--radius-md)',
               backgroundColor: 'rgba(239, 108, 0, 0.06)',
               border: '1.5px solid rgba(239, 108, 0, 0.3)',
@@ -401,29 +472,69 @@ export function InvoiceView({ setPage }) {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
                 <ShieldCheck size={20} color="#ef6c00" />
-                <h4 style={{ fontSize: '14px', fontWeight: 700, margin: 0, color: '#ef6c00' }}>
-                  Menunggu Penyelesaian Pembayaran
+                <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0, color: '#ef6c00' }}>
+                  Melengkapi Pembayaran yang Belum Selesai
                 </h4>
               </div>
-              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 12px' }}>
-                Lanjutkan pembayaran resmi Midtrans dengan mengeklik tombol di bawah ini:
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 14px', lineHeight: 1.5 }}>
+                Pesanan Anda telah tercatat dengan aman. Silakan selesaikan pembayaran melalui Midtrans atau verifikasi status pembayaran:
               </p>
 
-              <button
-                onClick={handlePayNow}
-                className="zen-btn-primary"
-                style={{
-                  padding: '9px 22px',
-                  fontSize: '13px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <CreditCard size={15} />
-                <span>Bayar Sekarang via Midtrans</span>
-                <ExternalLink size={13} />
-              </button>
+              {checkFeedback && (
+                <div style={{
+                  maxWidth: '480px',
+                  margin: '0 auto 14px',
+                  padding: '9px 14px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  backgroundColor: checkFeedback.type === 'success' ? 'rgba(46, 125, 50, 0.12)' : 'rgba(239, 108, 0, 0.12)',
+                  color: checkFeedback.type === 'success' ? '#2e7d32' : '#ef6c00',
+                  border: `1px solid ${checkFeedback.type === 'success' ? 'rgba(46, 125, 50, 0.3)' : 'rgba(239, 108, 0, 0.3)'}`
+                }}>
+                  {checkFeedback.text}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <button
+                  onClick={handlePayNow}
+                  className="zen-btn-primary"
+                  style={{
+                    padding: '9px 20px',
+                    fontSize: '13px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <CreditCard size={15} />
+                  <span>Bayar Sekarang via Midtrans</span>
+                  <ExternalLink size={13} />
+                </button>
+
+                <button
+                  onClick={handleCheckPaymentStatus}
+                  disabled={checkingPayment}
+                  className="zen-btn-secondary"
+                  style={{
+                    padding: '9px 18px',
+                    fontSize: '13px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: checkingPayment ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <RefreshCw size={14} className={checkingPayment ? 'animate-spin' : ''} />
+                  <span>{checkingPayment ? 'Memeriksa...' : 'Cek Status Pembayaran'}</span>
+                </button>
+              </div>
+
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#ef6c00', display: 'inline-block' }} />
+                <span>Halaman invoice memantau status pesanan secara otomatis</span>
+              </div>
             </div>
           )}
 

@@ -43,7 +43,14 @@ class ProductService {
 
   async deleteProduct(id) {
     await this.getProductById(id); // Memastikan ada
-    await productRepository.deleteById(id);
+    try {
+      await productRepository.deleteById(id);
+    } catch (err) {
+      if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+        throw new BadRequestError('Produk ini tidak dapat dihapus karena sudah memiliki riwayat transaksi pesanan.');
+      }
+      throw err;
+    }
     return { id, deleted: true };
   }
 }

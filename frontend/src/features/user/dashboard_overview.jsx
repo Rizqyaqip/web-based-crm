@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DollarSign, ShoppingCart, AlertTriangle, ArrowUpRight, CheckCircle2, Clock, RefreshCw } from 'lucide-react';
 import { getDashboardStats, updateOrderStatus, formatIDR } from '../../services/api';
+import { useAuth } from '../../context/auth_context';
 
 export function DashboardOverview({ setPage }) {
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,11 +35,11 @@ export function DashboardOverview({ setPage }) {
   // Update optimistik lokal untuk menghindari query agregasi berat ke database secara berulang
   const handleQuickStatusChange = async (orderId, newStatus) => {
     try {
-      await updateOrderStatus(orderId, newStatus);
+      await updateOrderStatus(orderId, newStatus, user);
       setStats((prev) => {
         if (!prev) return prev;
         const updatedRecent = prev.recent_orders?.map((o) =>
-          o.id === orderId ? { ...o, status: newStatus } : o
+          o.id === orderId ? { ...o, status: newStatus, staff_nama: user?.nama || o.staff_nama } : o
         );
         return {
           ...prev,
@@ -178,7 +180,7 @@ export function DashboardOverview({ setPage }) {
             </span>
             {kpis.low_stock_count > 0 && (
               <button
-                onClick={() => setPage('admin-stock-entry')}
+                onClick={() => setPage('user-stock-entry')}
                 style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent-vermilion)' }}
               >
                 + Tambah Stok →
@@ -271,7 +273,7 @@ export function DashboardOverview({ setPage }) {
             </p>
           </div>
           <button
-            onClick={() => setPage('admin-orders')}
+            onClick={() => setPage('user-orders')}
             className="zen-btn-secondary"
             style={{ padding: '6px 14px', fontSize: '12px' }}
           >

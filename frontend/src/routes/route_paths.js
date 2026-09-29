@@ -5,9 +5,20 @@ export const ROUTE_PATHS = {
   CATALOG: 'catalog',
   CHECKOUT_SUCCESS: 'checkout-success',
   LOGIN: 'login',
-  ADMIN_DASHBOARD: 'admin-dashboard',
-  ADMIN_STOCK_ENTRY: 'admin-stock-entry',
-  ADMIN_STOCK_LOGS: 'admin-stock-logs',
-  ADMIN_ORDERS: 'admin-orders',
-  ADMIN_STAFF: 'admin-staff'
+
+  // Rute bersama untuk staf dan admin (digeneralisir ke user)
+  USER_DASHBOARD: 'user-dashboard',
+  USER_STOCK_ENTRY: 'user-stock-entry',
+  USER_STOCK_LOGS: 'user-stock-logs',
+  USER_ORDERS: 'user-orders',
+
+  // Rute khusus administrator (mempertahankan penamaan admin)
+  ADMIN_STAFF: 'admin-staff',
+
+  // Alias kompatibilitas
+  ADMIN_DASHBOARD: 'user-dashboard',
+  ADMIN_STOCK_ENTRY: 'user-stock-entry',
+  ADMIN_STOCK_LOGS: 'user-stock-logs',
+  ADMIN_ORDERS: 'user-orders'
 };
+

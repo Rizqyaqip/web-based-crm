@@ -8,10 +8,10 @@ const PAGE_TITLES = {
   [ROUTE_PATHS.CATALOG]: 'Ketsai - Katalog Menu',
   [ROUTE_PATHS.CHECKOUT_SUCCESS]: 'Ketsai - Payment',
   [ROUTE_PATHS.LOGIN]: 'Ketsai - Login',
-  [ROUTE_PATHS.ADMIN_DASHBOARD]: 'Ketsai Portal - Dashboard',
-  [ROUTE_PATHS.ADMIN_STOCK_ENTRY]: 'Ketsai Portal - Input Stok',
-  [ROUTE_PATHS.ADMIN_STOCK_LOGS]: 'Ketsai Portal - Riwayat Stok',
-  [ROUTE_PATHS.ADMIN_ORDERS]: 'Ketsai Portal - Riwayat Checkout',
+  [ROUTE_PATHS.USER_DASHBOARD]: 'Ketsai Portal - Dashboard',
+  [ROUTE_PATHS.USER_STOCK_ENTRY]: 'Ketsai Portal - Input Stok',
+  [ROUTE_PATHS.USER_STOCK_LOGS]: 'Ketsai Portal - Riwayat Stok',
+  [ROUTE_PATHS.USER_ORDERS]: 'Ketsai Portal - Riwayat Checkout',
   [ROUTE_PATHS.ADMIN_STAFF]: 'Ketsai Portal - Kelola Akun Staf'
 };
 

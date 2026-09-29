@@ -6,7 +6,7 @@ class OrderRepository {
   }
 
   async findGuestUser(conn = pool) {
-    const [rows] = await conn.query("SELECT id FROM users WHERE role = 'customer' LIMIT 1");
+    const [rows] = await conn.query("SELECT id FROM users WHERE role = 'staff' ORDER BY id ASC LIMIT 1");
     return rows.length > 0 ? rows[0].id : 1;
   }
 
@@ -24,7 +24,7 @@ class OrderRepository {
   }
 
   async insertOrder(conn, { userId, user_id, namaCustomer, nama_customer, noHp, no_hp, alamat, tanggalPesan, tanggal_pesan, status = 'Pending', totalHarga, total_harga }) {
-    const finalUserId = userId || user_id;
+    const finalUserId = userId !== undefined ? userId : (user_id !== undefined ? user_id : null);
     const finalNama = (namaCustomer || nama_customer || '').trim();
     const finalHp = (noHp || no_hp || '').trim();
     const finalAlamat = (alamat || '').trim();
@@ -96,16 +96,19 @@ class OrderRepository {
     let sql = `
       SELECT 
         o.id,
+        o.user_id,
         o.nama_customer,
         o.no_hp,
         o.alamat,
         o.tanggal_pesan,
         o.status,
         o.total_harga,
+        u.nama AS staff_nama,
         p.metode AS metode_pembayaran,
         p.status AS status_pembayaran,
         i.id AS invoice_id
       FROM orders o
+      LEFT JOIN users u ON o.user_id = u.id
       LEFT JOIN payments p ON o.id = p.order_id
       LEFT JOIN invoices i ON o.id = i.order_id
     `;
@@ -148,17 +151,20 @@ class OrderRepository {
     const [rows] = await pool.query(`
       SELECT 
         o.id,
+        o.user_id,
         o.nama_customer,
         o.no_hp,
         o.alamat,
         o.tanggal_pesan,
         o.status,
         o.total_harga,
+        u.nama AS staff_nama,
         p.metode AS metode_pembayaran,
         p.status AS status_pembayaran,
         i.id AS invoice_id,
         i.tanggal_cetak
       FROM orders o
+      LEFT JOIN users u ON o.user_id = u.id
       LEFT JOIN payments p ON o.id = p.order_id
       LEFT JOIN invoices i ON o.id = i.order_id
       WHERE o.id = ?
@@ -187,9 +193,22 @@ class OrderRepository {
     return rows;
   }
 
-  async updateOrderStatus(id, status) {
+  async updateOrderStatus(id, status, staffId = null) {
+    if (staffId) {
+      const [result] = await pool.query(
+        'UPDATE orders SET status = ?, user_id = ? WHERE id = ?',
+        [status, staffId, id]
+      );
+      return result.affectedRows > 0;
+    }
     const [result] = await pool.query('UPDATE orders SET status = ? WHERE id = ?', [status, id]);
     return result.affectedRows > 0;
+  }
+
+  async findUserIdByName(name) {
+    if (!name) return null;
+    const [rows] = await pool.query('SELECT id FROM users WHERE nama = ? LIMIT 1', [name]);
+    return rows.length > 0 ? rows[0].id : null;
   }
 
   async updatePaymentStatusByOrderId(orderId, status) {

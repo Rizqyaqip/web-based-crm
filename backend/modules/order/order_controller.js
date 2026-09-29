@@ -27,10 +27,23 @@ class OrderController {
 
   async updateStatus(req, res) {
     const { id } = req.params;
-    const { status: orderState } = req.body;
-    const result = await orderService.updateStatus(id, orderState);
+    const { status: orderState, staff_id, staffId, staff_nama, staffNama } = req.body;
+    let finalStaffId = staff_id || staffId || req.user?.id || null;
+
+    if (!finalStaffId && (staff_nama || staffNama)) {
+      finalStaffId = await orderService.findUserIdByName(staff_nama || staffNama);
+    }
+
+    const result = await orderService.updateStatus(id, orderState, finalStaffId);
     const status = (httpStatusCodes && httpStatusCodes.ok) || HTTP_STATUS.OK || 200;
     return sendSuccess(res, status, `Status pesanan #${id} berhasil diubah menjadi ${orderState}`, result);
+  }
+
+  async checkPayment(req, res) {
+    const { id } = req.params;
+    const order = await orderService.checkOrderPaymentStatus(id);
+    const status = (httpStatusCodes && httpStatusCodes.ok) || HTTP_STATUS.OK || 200;
+    return sendSuccess(res, status, 'Status pembayaran pesanan berhasil diverifikasi', order);
   }
 
   async updatePayment(req, res) {

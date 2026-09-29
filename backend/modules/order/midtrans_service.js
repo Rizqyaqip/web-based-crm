@@ -109,6 +109,15 @@ class MidtransService {
     return { paymentStatus: 'Menunggu Pembayaran', orderStatus: 'Pending' };
   }
 
+  async getTransactionStatus(orderId) {
+    try {
+      if (!this.snap || !this.snap.transaction) return null;
+      return await this.snap.transaction.status(orderId);
+    } catch (err) {
+      console.warn(`[Midtrans] Gagal memeriksa status transaksi ${orderId}:`, err.message);
+      return null;
+    }
+  }
 }
 
 module.exports = new MidtransService();

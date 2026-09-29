@@ -31,11 +31,12 @@ desktop.ini
 
 # Environment Variables & Secret Credentials (Sangat rahasia)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 *.local
+backend/.env
+frontend/.env
+!backend/.env.example
+!frontend/.env.example
 !.env.example
 
 # Dependencies & Package Manager

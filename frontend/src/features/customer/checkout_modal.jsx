@@ -53,8 +53,18 @@ export function CheckoutModal({ setPage }) {
         const orderData = res.data;
         const snapToken = orderData.snap_token || orderData.snapToken;
 
+        // 1. Simpan order ke session/cart context
+        recordCheckoutSuccess(orderData);
+
+        // 2. Tutup modal formulir agar customer tidak tertahan pada modal input
+        setIsCheckoutModalOpen(false);
+
+        // 3. Arahkan tampilan langsung ke halaman checkout / invoice
+        setPage('checkout-success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 4. Buka popup resmi Midtrans Snap di atas halaman checkout
         if (snapToken && typeof window !== 'undefined' && window.snap) {
-          // Buka popup resmi Midtrans Snap
           window.snap.pay(snapToken, {
             onSuccess: (result) => {
               const resolvedMethod = formatMidtransPaymentMethod(result);
@@ -68,11 +78,9 @@ export function CheckoutModal({ setPage }) {
                 ...orderData,
                 payment_result: result,
                 metode_pembayaran: resolvedMethod,
-                status_pembayaran: 'Lunas'
+                status_pembayaran: 'Lunas',
+                status_pesanan: 'Diproses'
               });
-              setIsCheckoutModalOpen(false);
-              setPage('checkout-success');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             onPending: (result) => {
               const resolvedMethod = formatMidtransPaymentMethod(result);
@@ -88,9 +96,6 @@ export function CheckoutModal({ setPage }) {
                 metode_pembayaran: resolvedMethod,
                 status_pembayaran: 'Menunggu Pembayaran'
               });
-              setIsCheckoutModalOpen(false);
-              setPage('checkout-success');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             onError: (result) => {
               const resolvedMethod = formatMidtransPaymentMethod(result);
@@ -100,24 +105,12 @@ export function CheckoutModal({ setPage }) {
                 metode_pembayaran: resolvedMethod,
                 status_pembayaran: 'Gagal'
               });
-              setIsCheckoutModalOpen(false);
-              setPage('checkout-success');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             onClose: () => {
-              // Jika popup ditutup sebelum pembayaran selesai, arahkan tetap ke invoice
-              recordCheckoutSuccess(orderData);
-              setIsCheckoutModalOpen(false);
-              setPage('checkout-success');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Jika popup ditutup pengguna sebelum bayar, pengguna sudah berada di halaman checkout
+              console.log('Popup Midtrans ditutup. Pengguna berada di halaman invoice.');
             }
           });
-        } else {
-          // Fallback jika snap script belum terload
-          recordCheckoutSuccess(orderData);
-          setIsCheckoutModalOpen(false);
-          setPage('checkout-success');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
     } catch (err) {
