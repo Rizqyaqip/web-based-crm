@@ -477,7 +477,7 @@ export function InvoiceView({ setPage }) {
                 </h4>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 14px', lineHeight: 1.5 }}>
-                Pesanan Anda telah tercatat dengan aman. Silakan selesaikan pembayaran melalui Midtrans atau verifikasi status pembayaran:
+                Pesanan Anda telah tercatat dengan aman. Silakan selesaikan pembayaran untuk verifikasi status pembayaran
               </p>
 
               {checkFeedback && (
@@ -509,7 +509,7 @@ export function InvoiceView({ setPage }) {
                   }}
                 >
                   <CreditCard size={15} />
-                  <span>Bayar Sekarang via Midtrans</span>
+                  <span>Pilih Metode Pembayaran</span>
                   <ExternalLink size={13} />
                 </button>
 

@@ -138,9 +138,9 @@ export function StockLogHistory() {
         render: (log) => (log.jenis === 'masuk' ? `+${log.jumlah}` : `-${log.jumlah}`)
       },
       {
-        header: 'Operator',
+        header: 'Operator Staf',
         key: 'operator_name',
-        render: (log) => log.operator_name || 'Sistem'
+        render: (log) => (log.operator_name && log.operator_name !== '-' ? log.operator_name : '-')
       }
     ];
 
@@ -363,8 +363,8 @@ export function StockLogHistory() {
                       }}>
                         {isMasuk ? `+${log.jumlah}` : `-${log.jumlah}`}
                       </td>
-                      <td style={{ padding: '12px 14px', fontWeight: 500 }}>
-                        {log.operator_name}
+                      <td style={{ padding: '12px 14px', fontWeight: 500, color: (log.operator_name && log.operator_name !== '-') ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                        {log.operator_name && log.operator_name !== '-' ? log.operator_name : '-'}
                       </td>
                     </tr>
                   );

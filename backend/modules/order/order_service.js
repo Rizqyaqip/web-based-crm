@@ -26,10 +26,7 @@ class OrderService {
     try {
       await conn.beginTransaction();
 
-      // 2. Ambil ID pengguna guest
-      const guestUserId = await orderRepository.findGuestUser(conn);
-
-      // 3. Verifikasi ketersediaan stok produk & kalkulasi total harga
+      // 2. Verifikasi ketersediaan stok produk & kalkulasi total harga
       let totalHarga = 0;
       const verifiedItems = [];
 
@@ -62,7 +59,7 @@ class OrderService {
         });
       }
 
-      // 4. Masukkan pesanan
+      // 3. Masukkan pesanan
       const tanggalPesan = new Date();
       const initialStatus = (orderStatus && orderStatus.pending) || ORDER_STATUS.PENDING || 'Pending';
 
@@ -76,7 +73,7 @@ class OrderService {
         totalHarga
       });
 
-      // 5. Masukkan item pesanan, kurangi stok, dan catat log mutasi stok keluar
+      // 4. Masukkan item pesanan, kurangi stok, dan catat log mutasi stok penjualan (operator dikosongkan)
       for (const item of verifiedItems) {
         await orderRepository.insertOrderItem(conn, {
           orderId,
@@ -89,7 +86,8 @@ class OrderService {
 
         await orderRepository.insertStockLog(conn, {
           productId: item.product_id,
-          userId: guestUserId,
+          userId: null, // Operator staf dikosongkan saat pengurangan stok dari penjualan
+          orderId,      // Relasi langsung ke transaksi pesanan
           jumlah: item.jumlah,
           jenis: 'penjualan',
           tanggal: tanggalPesan

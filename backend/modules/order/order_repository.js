@@ -5,11 +5,6 @@ class OrderRepository {
     return await pool.getConnection();
   }
 
-  async findGuestUser(conn = pool) {
-    const [rows] = await conn.query("SELECT id FROM users WHERE role = 'staff' ORDER BY id ASC LIMIT 1");
-    return rows.length > 0 ? rows[0].id : 1;
-  }
-
   async findProductForUpdate(conn, productId) {
     const [rows] = await conn.query(
       'SELECT id, nama_produk, harga, jumlah_stok FROM products WHERE id = ? FOR UPDATE',
@@ -57,14 +52,15 @@ class OrderRepository {
     );
   }
 
-  async insertStockLog(conn, { productId, product_id, userId, user_id, jumlah, jenis, tanggal }) {
+  async insertStockLog(conn, { productId, product_id, userId, user_id, orderId, order_id, jumlah, jenis, tanggal }) {
     const finalProductId = productId || product_id;
-    const finalUserId = userId || user_id;
+    const finalUserId = userId !== undefined ? userId : (user_id !== undefined ? user_id : null);
+    const finalOrderId = orderId || order_id || null;
     const finalTanggal = tanggal || new Date();
 
     await conn.query(
-      'INSERT INTO stock_logs (product_id, user_id, jumlah, jenis, tanggal) VALUES (?, ?, ?, ?, ?)',
-      [finalProductId, finalUserId, jumlah, jenis, finalTanggal]
+      'INSERT INTO stock_logs (product_id, user_id, order_id, jumlah, jenis, tanggal) VALUES (?, ?, ?, ?, ?, ?)',
+      [finalProductId, finalUserId, finalOrderId, jumlah, jenis, finalTanggal]
     );
   }
 
@@ -198,6 +194,11 @@ class OrderRepository {
       const [result] = await pool.query(
         'UPDATE orders SET status = ?, user_id = ? WHERE id = ?',
         [status, staffId, id]
+      );
+      // Perbarui juga operator staf pada catatan mutasi stok terkait pesanan ini
+      await pool.query(
+        'UPDATE stock_logs SET user_id = ? WHERE order_id = ?',
+        [staffId, id]
       );
       return result.affectedRows > 0;
     }

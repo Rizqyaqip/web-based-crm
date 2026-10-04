@@ -30,19 +30,20 @@ async function seedDatabaseDefaults(pool) {
       // Standarisasi role: hanya 'admin' dan 'staff'
       await pool.query("UPDATE users SET role = 'staff' WHERE role NOT IN ('admin', 'staff')");
       await pool.query("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff'");
+
+      // 4. Pastikan kolom user_id pada stock_logs bersifat nullable dan kolom order_id tersedia
+      await pool.query('ALTER TABLE stock_logs MODIFY COLUMN user_id INT(11) NULL DEFAULT NULL');
+      const [orderIdCols] = await pool.query("SHOW COLUMNS FROM stock_logs LIKE 'order_id'");
+      if (orderIdCols.length === 0) {
+        await pool.query('ALTER TABLE stock_logs ADD COLUMN order_id INT(11) NULL DEFAULT NULL AFTER user_id');
+        try {
+          await pool.query('ALTER TABLE stock_logs ADD CONSTRAINT fk_stock_logs_orders FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE');
+        } catch (fkErr) {
+          // Abaikan jika constraint sudah ada
+        }
+      }
     } catch (colErr) {
       // Abaikan jika tabel belum siap saat migrasi awal
-    }
-
-    // 4. Pastikan akun pengguna internal (Admin & Staff) tersedia di tabel users jika kosong
-    const [userRows] = await pool.query('SELECT COUNT(*) as count FROM users');
-    if (userRows[0].count === 0) {
-      console.log('[INIT] Menyiapkan data awal pengguna internal (Admin & Staff)...');
-      await pool.query(`
-        INSERT INTO users (nama, password, role) VALUES 
-        ('admin', 'admin123', 'admin'),
-        ('staff', 'staff123', 'staff')
-      `);
     }
   } catch (err) {
     console.warn('[WARN] Peringatan saat inisialisasi database:', err.message);

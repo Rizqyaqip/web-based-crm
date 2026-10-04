@@ -57,7 +57,6 @@ export function CartDrawer() {
           backgroundColor: 'var(--bg-card)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Logo height="24px" style={{ borderRadius: '3px' }} />
             <h3 style={{ fontSize: '16px', margin: 0, fontWeight: 700 }}>
               Keranjang Pesanan ({totalItems})
             </h3>
@@ -97,7 +96,7 @@ export function CartDrawer() {
                 Keranjang masih kosong
               </p>
               <p style={{ fontSize: '13px', maxWidth: '240px', margin: '0 auto' }}>
-                Pilih menu artisanal favorit Anda dari katalog untuk mulai memesan.
+                Pilih menu anda dari katalog untuk mulai memesan.
               </p>
             </div>
           ) : (

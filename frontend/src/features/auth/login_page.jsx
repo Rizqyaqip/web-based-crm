@@ -54,7 +54,7 @@ export function LoginPage({ setPage }) {
             <Logo height="36px" style={{ borderRadius: '4px' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
-            <span className="hanko-stamp">PORTAL STAF & ADMIN</span>
+            <span className="hanko-stamp">PORTAL</span>
           </div>
           <h2 style={{ fontSize: '30px', fontWeight: 700, margin: '4px 0' }}>
             Login
@@ -137,7 +137,7 @@ export function LoginPage({ setPage }) {
             ) : (
               <>
                 <LogIn size={16} />
-                <span>Masuk ke Dashboard</span>
+                <span>Masuk</span>
               </>
             )}
           </button>
@@ -159,7 +159,7 @@ export function LoginPage({ setPage }) {
             }}
           >
             <ArrowLeft size={15} />
-            <span>Kembali ke Halaman Pelanggan</span>
+            <span>Kembali</span>
           </button>
         </div>
       </div>

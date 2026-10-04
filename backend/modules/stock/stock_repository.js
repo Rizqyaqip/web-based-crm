@@ -12,10 +12,11 @@ class StockRepository {
       SELECT 
         sl.id,
         sl.product_id,
+        sl.order_id,
         p.nama_produk,
         p.kategori,
         sl.user_id,
-        COALESCE(u.nama, 'Sistem') AS operator_name,
+        COALESCE(u.nama, '-') AS operator_name,
         sl.jumlah,
         sl.jenis,
         sl.tanggal
@@ -70,14 +71,15 @@ class StockRepository {
     await conn.query('UPDATE products SET jumlah_stok = ? WHERE id = ?', [newStock, productId]);
   }
 
-  async insertLog(conn, { productId, product_id, userId, user_id, jumlah, jenis, tanggal }) {
+  async insertLog(conn, { productId, product_id, userId, user_id, orderId, order_id, jumlah, jenis, tanggal }) {
     const finalProductId = productId || product_id;
-    const finalUserId = userId || user_id;
+    const finalUserId = userId !== undefined ? userId : (user_id !== undefined ? user_id : null);
+    const finalOrderId = orderId || order_id || null;
     const finalTanggal = tanggal || new Date();
 
     const [result] = await conn.query(
-      'INSERT INTO stock_logs (product_id, user_id, jumlah, jenis, tanggal) VALUES (?, ?, ?, ?, ?)',
-      [finalProductId, finalUserId, jumlah, jenis, finalTanggal]
+      'INSERT INTO stock_logs (product_id, user_id, order_id, jumlah, jenis, tanggal) VALUES (?, ?, ?, ?, ?, ?)',
+      [finalProductId, finalUserId, finalOrderId, jumlah, jenis, finalTanggal]
     );
     return result.insertId;
   }

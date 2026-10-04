@@ -76,7 +76,7 @@ export function AppRoutes({ currentPage, setPage }) {
         break;
       case ROUTE_PATHS.USER_STOCK_LOGS:
       case 'admin-stock-logs':
-        title = 'Riwayat Input Stok';
+        title = 'Riwayat Mutasi Stok';
         subtitle = 'Riwayat mutasi stok masuk dan keluar';
         content = <StockLogHistory />;
         break;

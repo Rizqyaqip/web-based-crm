@@ -32,14 +32,10 @@ class StockService {
 
       await stockRepository.updateProductStock(conn, finalProductId, newStock);
 
-      let operatorId = finalUserId;
+      let operatorId = finalUserId || null;
       if (operatorId) {
         const [u] = await conn.query('SELECT id FROM users WHERE id = ?', [operatorId]);
         if (u.length === 0) operatorId = null;
-      }
-      if (!operatorId) {
-        const [defaultUser] = await conn.query("SELECT id FROM users WHERE role IN ('admin', 'staff') ORDER BY id ASC LIMIT 1");
-        operatorId = defaultUser[0]?.id || 2;
       }
       const tanggal = new Date();
 
