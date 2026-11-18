@@ -1,9 +1,6 @@
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { Button } from './button';
 
-/**
- * Komponen ConfirmDialog standar untuk konfirmasi tindakan destruktif/penting
- */
 export function ConfirmDialog({
   isOpen = true,
   title = 'Konfirmasi Tindakan',

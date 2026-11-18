@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-/**
- * Komponen Modal Dialog terpusat Ketsai Zen Design System
- */
 export function Modal({
   isOpen,
   onClose,
@@ -19,7 +16,6 @@ export function Modal({
   className = '',
   style = {}
 }) {
-  // Tutup dengan ESC
   useEffect(() => {
     if (!isOpen || !closeOnEsc) return;
 
@@ -58,13 +54,11 @@ export function Modal({
         backdropFilter: 'blur(6px)'
       }}
     >
-      {/* Backdrop */}
       <div
         onClick={() => closeOnBackdrop && !isLoading && onClose()}
         style={{ position: 'absolute', inset: 0 }}
       />
 
-      {/* Modal Box */}
       <div
         className={`zen-modal ${className}`.trim()}
         style={{
@@ -83,7 +77,6 @@ export function Modal({
           ...style
         }}
       >
-        {/* HEADER */}
         {(title || icon) && (
           <div
             style={{
@@ -142,10 +135,8 @@ export function Modal({
           </div>
         )}
 
-        {/* BODY */}
         <div style={{ padding: '24px', overflowY: 'auto', flex: 1 }}>{children}</div>
 
-        {/* FOOTER */}
         {footer && (
           <div
             style={{

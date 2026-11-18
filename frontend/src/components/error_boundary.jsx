@@ -1,10 +1,6 @@
 import React from 'react';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 
-/**
- * ErrorBoundary untuk menangkap error render React dan mencegah layar putih (white screen).
- * Didesain dengan estetika Ketsai Zen.
- */
 export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);

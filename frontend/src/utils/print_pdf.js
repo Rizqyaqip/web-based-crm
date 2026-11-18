@@ -1,10 +1,4 @@
-/**
- * Utility Reusable untuk Mencetak Tabel Laporan ke Format PDF / Printer Browser.
- * Menggunakan iframe terisolasi dengan layout A4 profesional, kop Ketsai,
- * metadata filter aktif, tabel rapi dengan pemotongan halaman otomatis, dan kartu ringkasan.
- */
 import logoImg from '../assets/logo.png';
-
 
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
@@ -16,19 +10,6 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-/**
- * Mencetak laporan tabel ke PDF / Dialog Cetak
- * @param {Object} options
- * @param {string} options.title - Judul laporan (e.g. 'Laporan Riwayat Mutasi Stok')
- * @param {string} [options.subtitle] - Subjudul laporan
- * @param {boolean} [options.isFiltered] - Status apakah data sedang dalam filter view
- * @param {string} [options.filterDescription] - Rincian parameter filter yang sedang aktif
- * @param {string} [options.printedBy] - Nama operator/user yang mencetak
- * @param {Array<{header: string, key: string, align?: 'left'|'center'|'right', render?: (item: any, index: number) => string}>} options.columns
- * @param {Array<any>} options.data - Data baris tabel
- * @param {Array<{label: string, value: string|number}>} [options.summaryCards] - Kartu ringkasan metrik
- * @param {string} [options.filename] - Nama default file saat disimpan sebagai PDF
- */
 export function printPdfReport({
   title = 'Laporan Data',
   subtitle = 'Ketsai Management System',
@@ -50,7 +31,6 @@ export function printPdfReport({
     minute: '2-digit'
   }) + ' WIB';
 
-  // Format HTML Metadata Grid
   const metadataItems = [
     { label: 'Status Data', value: isFiltered ? 'Data Terfilter' : 'Semua Riwayat (Lengkap)', isBadge: true, isFiltered },
     { label: 'Tanggal Cetak', value: printDate },
@@ -62,12 +42,10 @@ export function printPdfReport({
     metadataItems.push({ label: 'Parameter Filter', value: filterDescription, fullWidth: true });
   }
 
-  // Buat HTML Table Headers
   const tableHeadersHtml = columns
     .map(col => `<th style="text-align: ${col.align || 'left'};">${escapeHtml(col.header)}</th>`)
     .join('');
 
-  // Buat HTML Table Rows
   let tableRowsHtml = '';
   if (data.length === 0) {
     tableRowsHtml = `
@@ -93,7 +71,6 @@ export function printPdfReport({
       .join('');
   }
 
-  // Buat HTML Summary Cards jika ada
   let summaryHtml = '';
   if (summaryCards.length > 0) {
     summaryHtml = `
@@ -111,7 +88,6 @@ export function printPdfReport({
     `;
   }
 
-  // Konten HTML Lengkap Dokumen Cetak
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="id">
@@ -367,7 +343,6 @@ export function printPdfReport({
     </html>
   `;
 
-  // Gunakan iframe terisolasi agar tidak merusak DOM utama
   const printFrame = document.createElement('iframe');
   printFrame.style.position = 'fixed';
   printFrame.style.right = '0';
@@ -400,7 +375,6 @@ export function printPdfReport({
     }
   };
 
-  // Tunggu gambar logo selesai dimuat sebelum memunculkan dialog cetak
   const frameImages = frameDoc.images;
   if (frameImages && frameImages.length > 0) {
     let loaded = 0;
@@ -419,7 +393,6 @@ export function printPdfReport({
         frameImages[i].onerror = onImgFinish;
       }
     }
-    // Fallback timer maksimal 700ms jika event onload tertunda
     setTimeout(triggerPrint, 700);
   } else {
     setTimeout(triggerPrint, 300);

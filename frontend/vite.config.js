@@ -18,7 +18,6 @@ function copyAssetsPlugin() {
   }
 }
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), copyAssetsPlugin()],
   resolve: {

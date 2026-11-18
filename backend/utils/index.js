@@ -27,7 +27,6 @@ module.exports = {
   ConflictError,
   sendSuccess,
   sendError,
-  // Category & naming utils
   getCategoryFolderName,
   ensureCategoryDirectory,
   toCamelCase

@@ -46,7 +46,6 @@ module.exports = {
   stockMutationTypes,
   paymentMethods,
 
-  // Aliases for compatibility
   USER_ROLES: userRoles,
   ORDER_STATUS: orderStatus,
   STOCK_MUTATION_TYPES: stockMutationTypes,

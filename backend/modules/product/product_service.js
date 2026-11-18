@@ -33,7 +33,7 @@ class ProductService {
   }
 
   async updateProduct(id, data = {}) {
-    await this.getProductById(id); // Memastikan ada
+    await this.getProductById(id);
     const updated = await productRepository.update(id, data);
     if (!updated) {
       throw new BadRequestError('Tidak ada kolom yang diubah');
@@ -42,7 +42,7 @@ class ProductService {
   }
 
   async deleteProduct(id) {
-    await this.getProductById(id); // Memastikan ada
+    await this.getProductById(id);
     try {
       await productRepository.deleteById(id);
     } catch (err) {

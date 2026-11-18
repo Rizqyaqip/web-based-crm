@@ -27,7 +27,6 @@ export const updateProduct = (id, productData) =>
 
 export const uploadProductImage = (file, category, productName) => {
   const formData = new FormData();
-  // PENTING: Append kategori dan nama_produk SEBELUM image agar stream multipart multer langsung membaca field
   if (category) {
     formData.append('kategori', category);
   }
@@ -57,6 +56,4 @@ export const ensureCategoryDirectory = (category) =>
     method: 'POST',
     body: { kategori: category }
   });
-
-
 

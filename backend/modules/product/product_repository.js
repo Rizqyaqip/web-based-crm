@@ -6,7 +6,7 @@ const mapProduct = (row) => {
   return {
     ...row,
     jumlah_stok: stok,
-    jumlahStok: stok // alias kompatibilitas
+    jumlahStok: stok
   };
 };
 
@@ -160,7 +160,6 @@ class ProductRepository {
     try {
       await pool.query('DELETE FROM stock_logs WHERE product_id = ?', [id]);
     } catch (e) {
-      // Abaikan jika tabel/relasi tidak ada
     }
     const [result] = await pool.query('DELETE FROM products WHERE id = ?', [id]);
     return result.affectedRows > 0;

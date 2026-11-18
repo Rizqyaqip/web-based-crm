@@ -2,7 +2,6 @@ const { envConfig } = require('../config');
 const { sendError } = require('../utils');
 
 function errorMiddleware(err, req, res, next) {
-  // Log internal error for server monitoring
   console.error('[Server Error Log]:', {
     message: err.message,
     code: err.code,
@@ -15,7 +14,6 @@ function errorMiddleware(err, req, res, next) {
   let errorCode = err.code || 'SERVER_ERROR';
   let errors = err.errors || null;
 
-  // Handle specific MySQL errors gracefully
   if (err.code === 'ER_DUP_ENTRY') {
     statusCode = 409;
     message = 'Data duplikat terdeteksi. Silakan gunakan nilai lain.';

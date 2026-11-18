@@ -1,8 +1,5 @@
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
 
-/**
- * Komponen Alert / Feedback Banner terpusat Ketsai Zen Design System
- */
 export function Alert({
   type = 'info',
   message,

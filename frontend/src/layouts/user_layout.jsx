@@ -54,7 +54,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
     }
   ];
 
-  // Menu Khusus Administrator (Kelola Staf)
   if (isAdmin) {
     navItems.push({
       path: ROUTE_PATHS.ADMIN_STAFF,
@@ -65,7 +64,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-surface)' }}>
-      {/* Mobile Drawer Backdrop Overlay */}
       {isMobileSidebarOpen && (
         <div
           className="mobile-overlay show-on-mobile"
@@ -73,9 +71,7 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
         />
       )}
 
-      {/* Sidebar Navigation */}
       <aside className={`user-sidebar admin-sidebar ${isMobileSidebarOpen ? 'open' : ''}`}>
-        {/* Brand Header with Mobile Close Button */}
         <div style={{
           padding: '20px 20px',
           borderBottom: '1px solid var(--border-subtle)',
@@ -106,7 +102,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
           </button>
         </div>
 
-        {/* User Identity Card */}
         <div style={{
           padding: '14px 20px',
           backgroundColor: 'var(--bg-card)',
@@ -140,7 +135,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
           </div>
         </div>
 
-        {/* Nav Links */}
         <nav style={{ padding: '16px 12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -172,7 +166,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
           })}
         </nav>
 
-        {/* Sidebar Footer Actions */}
         <div style={{ padding: '16px 14px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <button
             onClick={() => handleNavigate(ROUTE_PATHS.LANDING)}
@@ -217,9 +210,7 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        {/* Top Header */}
         <header
           className="user-header-responsive admin-header-responsive"
           style={{
@@ -232,7 +223,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* Hamburger Toggle Button on Mobile */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
               className="show-on-mobile"
@@ -263,7 +253,6 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="user-main-responsive admin-main-responsive" style={{ padding: '28px 32px', flex: 1, overflowY: 'auto' }}>
           {children}
         </main>
@@ -272,6 +261,5 @@ export function UserLayout({ currentPage, setPage, title, subtitle, children }) 
   );
 }
 
-// Aliases for compatibility
 export const AdminLayout = UserLayout;
 export default UserLayout;

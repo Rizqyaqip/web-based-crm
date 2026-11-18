@@ -53,17 +53,13 @@ export function CheckoutModal({ setPage }) {
         const orderData = res.data;
         const snapToken = orderData.snap_token || orderData.snapToken;
 
-        // 1. Simpan order ke session/cart context
         recordCheckoutSuccess(orderData);
 
-        // 2. Tutup modal formulir agar customer tidak tertahan pada modal input
         setIsCheckoutModalOpen(false);
 
-        // 3. Arahkan tampilan langsung ke halaman checkout / invoice
         setPage('checkout-success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // 4. Buka popup resmi Midtrans Snap di atas halaman checkout
         if (snapToken && typeof window !== 'undefined' && window.snap) {
           window.snap.pay(snapToken, {
             onSuccess: (result) => {
@@ -107,7 +103,6 @@ export function CheckoutModal({ setPage }) {
               });
             },
             onClose: () => {
-              // Jika popup ditutup pengguna sebelum bayar, pengguna sudah berada di halaman checkout
               console.log('Popup Midtrans ditutup. Pengguna berada di halaman invoice.');
             }
           });
@@ -149,7 +144,6 @@ export function CheckoutModal({ setPage }) {
         border: '1px solid var(--border-card)',
         zIndex: 121
       }}>
-        {/* Header Modal */}
         <div style={{
           padding: 'clamp(14px, 3vw, 20px) clamp(16px, 4vw, 24px)',
           borderBottom: '1px solid var(--border-subtle)',
@@ -181,7 +175,6 @@ export function CheckoutModal({ setPage }) {
           </button>
         </div>
 
-        {/* Form Body */}
         <form onSubmit={handleSubmit} style={{ padding: 'clamp(16px, 4vw, 24px)' }}>
           {errorMsg && (
             <div style={{
@@ -197,7 +190,6 @@ export function CheckoutModal({ setPage }) {
             </div>
           )}
 
-          {/* Section: Data Diri */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '22px' }}>
             <div>
               <label className="zen-label">Nama Lengkap Penerima *</label>
@@ -240,7 +232,6 @@ export function CheckoutModal({ setPage }) {
             </div>
           </div>
 
-          {/* Section: Midtrans Information Badge */}
           <div style={{
             marginBottom: '22px',
             padding: '16px',
@@ -311,7 +302,6 @@ export function CheckoutModal({ setPage }) {
             </div>
           </div>
 
-          {/* Ringkasan Biaya */}
           <div style={{
             backgroundColor: 'var(--bg-card)',
             padding: '14px 18px',
@@ -331,7 +321,6 @@ export function CheckoutModal({ setPage }) {
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}

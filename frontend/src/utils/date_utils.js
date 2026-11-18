@@ -1,4 +1,3 @@
-// Date and time formatting utilities in Indonesian locale
 
 export function formatDateIndonesian(dateInput) {
   if (!dateInput) return '-';
@@ -37,7 +36,6 @@ export function formatTimeIndonesian(dateInput) {
   });
 }
 
-// Aliases for camelCase
 export const formatDate = formatDateIndonesian;
 export const formatDateTime = formatDatetimeIndonesian;
 export const formatTime = formatTimeIndonesian;

@@ -20,7 +20,6 @@ export const StockProductGrid = memo(function StockProductGrid({
 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* SEARCH & FILTERS BAR */}
       <div className="zen-card" style={{ padding: '20px' }}>
         <div style={{
           display: 'flex',
@@ -37,7 +36,6 @@ export const StockProductGrid = memo(function StockProductGrid({
             </span>
           </div>
 
-          {/* Status Level Filter Buttons */}
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {[
               { key: 'all', label: 'Semua Status' },
@@ -66,7 +64,6 @@ export const StockProductGrid = memo(function StockProductGrid({
           </div>
         </div>
 
-        {/* Input Search & Filter Kategori Dropdown */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
           <div style={{ flex: 1, minWidth: '220px', position: 'relative' }}>
             <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -96,7 +93,6 @@ export const StockProductGrid = memo(function StockProductGrid({
         </div>
       </div>
 
-      {/* GRID OF PRODUCT STOCK CARDS */}
       {isFetching ? (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
           <Loader2 size={32} className="animate-spin" style={{ margin: '0 auto 12px' }} />
@@ -137,7 +133,6 @@ export const StockProductGrid = memo(function StockProductGrid({
                 }}
               >
                 <div>
-                  {/* Image Container with Badges */}
                   <div style={{ position: 'relative', width: '100%', paddingTop: '58%', overflow: 'hidden', backgroundColor: 'var(--bg-tertiary)' }}>
                     <img
                       src={prod.gambar || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'}
@@ -189,7 +184,6 @@ export const StockProductGrid = memo(function StockProductGrid({
                     </div>
                   </div>
 
-                  {/* Content Info */}
                   <div style={{ padding: '16px 16px 10px' }}>
                     <h4 style={{
                       fontSize: '15px',
@@ -203,7 +197,6 @@ export const StockProductGrid = memo(function StockProductGrid({
                       {formatIDR(prod.harga)}
                     </span>
 
-                    {/* Big Stock Indicator Pill */}
                     <div style={{
                       marginTop: '14px',
                       padding: '10px 12px',
@@ -251,7 +244,6 @@ export const StockProductGrid = memo(function StockProductGrid({
                   </div>
                 </div>
 
-                {/* Bottom Card Action */}
                 <div style={{ padding: '0 16px 16px', display: 'flex', gap: '8px' }}>
                   <button
                     type="button"

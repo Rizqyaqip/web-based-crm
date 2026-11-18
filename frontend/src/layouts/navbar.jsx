@@ -25,7 +25,6 @@ export function Navbar({ currentPage, setPage }) {
         alignItems: 'center',
         justifyContent: 'space-between'
       }}>
-        {/* Logo & Hanko Brand */}
         <div 
           onClick={() => handleNavigate('landing')}
           style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
@@ -33,7 +32,6 @@ export function Navbar({ currentPage, setPage }) {
           <Logo height="36px" style={{ borderRadius: '6px' }} />
         </div>
 
-        {/* Desktop Navigation Links */}
         <nav className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
           <button
             onClick={() => handleNavigate('landing')}
@@ -64,9 +62,7 @@ export function Navbar({ currentPage, setPage }) {
           </button>
         </nav>
 
-        {/* Actions: Cart & Staff Portal & Hamburger Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Cart Trigger (Visible on all screens) */}
           <button
             onClick={() => setIsCartOpen(true)}
             style={{
@@ -101,7 +97,6 @@ export function Navbar({ currentPage, setPage }) {
             )}
           </button>
 
-          {/* Desktop Staff Portal Button */}
           <div className="hide-on-mobile">
             {isAuthenticated ? (
               <button
@@ -142,7 +137,6 @@ export function Navbar({ currentPage, setPage }) {
             )}
           </div>
 
-          {/* Mobile Hamburger Toggle Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="show-on-desktop"
@@ -178,7 +172,6 @@ export function Navbar({ currentPage, setPage }) {
         </div>
       </div>
 
-      {/* Mobile Nav Drawer Dropdown */}
       {isMobileMenuOpen && (
         <div className="mobile-nav-drawer show-on-mobile">
           <button

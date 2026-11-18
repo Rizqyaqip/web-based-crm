@@ -20,7 +20,6 @@ export function EditProductModal({
 }) {
   const fileInputRef = useRef(null);
 
-  // Form State
   const [formData, setFormData] = useState({
     nama_produk: '',
     kategori: '',
@@ -200,7 +199,6 @@ export function EditProductModal({
         />
       ) : (
         <form id="edit-product-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-          {/* 1. Nama Produk */}
           <FormField
             label="Nama Produk Kuliner"
             required
@@ -214,7 +212,6 @@ export function EditProductModal({
             />
           </FormField>
 
-          {/* 2. Kategori Produk */}
           <FormField
             label="Kategori Produk"
             required
@@ -247,7 +244,6 @@ export function EditProductModal({
             )}
           </FormField>
 
-          {/* 3. Harga Satuan & Koreksi Stok */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
             <FormField label="Harga Satuan (Rp)" required helperText={formatIDR(formData.harga || 0)}>
               <Input
@@ -271,7 +267,6 @@ export function EditProductModal({
             </FormField>
           </div>
 
-          {/* 4. Deskripsi Menu */}
           <FormField label="Deskripsi Menu">
             <Textarea
               rows={2}
@@ -281,7 +276,6 @@ export function EditProductModal({
             />
           </FormField>
 
-          {/* 5. Foto / Gambar Produk */}
           <FormField label="Foto Gambar Menu" icon={<ImageIcon size={14} style={{ color: 'var(--accent-vermilion)' }} />}>
             <div
               style={{

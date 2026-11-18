@@ -1,4 +1,3 @@
-// Utility to resolve and format payment methods returned by Midtrans Snap
 
 export function formatMidtransPaymentMethod(orderOrResult) {
   if (!orderOrResult) return 'Midtrans';

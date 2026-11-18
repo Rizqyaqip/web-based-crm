@@ -10,7 +10,6 @@ export const StockMetrics = memo(function StockMetrics({ stats }) {
       gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
       gap: '16px'
     }}>
-      {/* 1. Total Menu */}
       <div className="zen-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div style={{
           width: '42px',
@@ -34,7 +33,6 @@ export const StockMetrics = memo(function StockMetrics({ stats }) {
         </div>
       </div>
 
-      {/* 2. Stok Aman */}
       <div className="zen-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div style={{
           width: '42px',
@@ -58,7 +56,6 @@ export const StockMetrics = memo(function StockMetrics({ stats }) {
         </div>
       </div>
 
-      {/* 3. Stok Menipis */}
       <div className="zen-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div style={{
           width: '42px',
@@ -82,7 +79,6 @@ export const StockMetrics = memo(function StockMetrics({ stats }) {
         </div>
       </div>
 
-      {/* 4. Stok Habis */}
       <div className="zen-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div style={{
           width: '42px',

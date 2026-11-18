@@ -1,26 +1,21 @@
-/* ==========================================================================
-   KETSAI DESIGN SYSTEM — ICHIGO ICHIE (一期一会)
-   Minimalist Zen, Appetizing Japanese Aesthetic, Contemporary Precision
-   ========================================================================== */
+
 
 :root {
-  /* Color Palette (Sesuai design.md) */
-  --bg-primary: #f6f1e6;       /* Warm Washi Paper Cream */
-  --bg-card: #efe8d8;          /* Soft Tinted Parchment */
+
+  --bg-primary: #f6f1e6;
+  --bg-card: #efe8d8;
   --bg-card-hover: #e7dfcc;
   --bg-surface: #ffffff;
-  --text-primary: #2b2a28;     /* Deep Sumi Charcoal */
-  --text-secondary: #5a5750;   /* Muted Warm Stone */
+  --text-primary: #2b2a28;
+  --text-secondary: #5a5750;
   --text-muted: #88847b;
   --border-subtle: #ded5c3;
   --border-card: #e5ddcd;
-  
-  /* Accent Colors */
-  --accent-vermilion: #b03a2e; /* Torii & Hanko Stamp Vermilion Red */
+
+  --accent-vermilion: #b03a2e;
   --accent-vermilion-hover: #8f2d23;
   --accent-vermilion-light: #faeae8;
-  
-  /* Semantic Status */
+
   --status-pending-bg: #fdf5e6;
   --status-pending-text: #b88628;
   --status-pending-border: #f3dfb2;
@@ -33,28 +28,23 @@
   --status-danger-bg: #faeae8;
   --status-danger-text: #b03a2e;
 
-  /* Typography */
   --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Noto Serif JP', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Elevation & Shadows */
   --shadow-sm: 0 2px 6px rgba(43, 42, 40, 0.04);
   --shadow-md: 0 6px 18px rgba(43, 42, 40, 0.06);
   --shadow-lg: 0 16px 36px rgba(43, 42, 40, 0.08);
   --shadow-modal: 0 24px 64px rgba(43, 42, 40, 0.16);
 
-  /* Radii */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-full: 9999px;
 
-  /* Transition */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -77,7 +67,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography Defaults */
 h1, h2, h3, h4, .font-serif {
   font-family: var(--font-serif);
   color: var(--text-primary);
@@ -104,7 +93,6 @@ button {
   background: none;
 }
 
-/* Glassmorphism & Surface Utilities */
 .glass-nav {
   background: rgba(246, 241, 230, 0.88);
   backdrop-filter: blur(14px);
@@ -187,7 +175,6 @@ button {
   background: var(--accent-vermilion-light);
 }
 
-/* Form Elements */
 .zen-input {
   width: 100%;
   background-color: var(--bg-surface);
@@ -213,7 +200,6 @@ button {
   margin-bottom: 6px;
 }
 
-/* Status Badges */
 .badge-status {
   display: inline-flex;
   align-items: center;
@@ -248,7 +234,6 @@ button {
   color: var(--status-danger-text);
 }
 
-/* Hanko Japanese Seal Icon Tag */
 .hanko-stamp {
   display: inline-block;
   border: 1.5px solid var(--accent-vermilion);
@@ -261,7 +246,6 @@ button {
   text-transform: uppercase;
 }
 
-/* Print Styles for Invoices */
 @media print {
   @page {
     size: A4 portrait;
@@ -302,11 +286,6 @@ button {
   }
 }
 
-/* ==========================================================================
-   RESPONSIVE UTILITIES & LAYOUT MEDIA QUERIES (DESKTOP & MOBILE)
-   ========================================================================== */
-
-/* Dual Workspace Grid on Stock Entry */
 .stock-entry-grid {
   display: grid;
   grid-template-columns: minmax(340px, 460px) 1fr;
@@ -314,7 +293,6 @@ button {
   align-items: start;
 }
 
-/* Stock Form Sticky on Desktop, Static on Tablet/Mobile */
 .stock-form-card {
   position: sticky;
   top: 90px;
@@ -327,27 +305,24 @@ button {
   }
 }
 
-/* Horizontal Scrollable Tabs with Touch Momentum */
 .scrollable-tabs {
   display: flex;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding-bottom: 4px;
 }
 .scrollable-tabs::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
-/* Responsive Table Wrapper */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Mobile Backdrop Overlay */
 .mobile-overlay {
   position: fixed;
   inset: 0;
@@ -358,7 +333,6 @@ button {
   transition: opacity var(--transition-normal);
 }
 
-/* Mobile Slide-In Navigation Drawer */
 .mobile-nav-drawer {
   position: absolute;
   top: 100%;
@@ -387,7 +361,6 @@ button {
   }
 }
 
-/* Tablet Breakpoint (max-width: 992px) */
 @media (max-width: 992px) {
   .stock-entry-grid {
     grid-template-columns: 1fr !important;
@@ -395,21 +368,19 @@ button {
   }
 }
 
-/* Mobile Breakpoint (max-width: 768px) */
 @media (max-width: 768px) {
   .hide-on-mobile {
     display: none !important;
   }
-  
+
   .show-on-mobile {
     display: block !important;
   }
-  
+
   .flex-on-mobile {
     display: flex !important;
   }
 
-  /* Compact Card & Modal Padding */
   .zen-card {
     border-radius: var(--radius-md);
   }
@@ -419,13 +390,11 @@ button {
     border-radius: var(--radius-md) !important;
   }
 
-  /* Touch-friendly Minimum Tap Target */
   .touch-target {
     min-height: 44px;
     min-width: 44px;
   }
 
-  /* Responsive Floating Cart Bar */
   .floating-cart-bar {
     width: calc(100% - 24px) !important;
     bottom: 16px !important;
@@ -433,7 +402,6 @@ button {
   }
 }
 
-/* User & Portal Layout Responsive */
 .user-sidebar,
 .admin-sidebar {
   width: 260px;

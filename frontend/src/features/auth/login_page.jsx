@@ -48,7 +48,6 @@ export function LoginPage({ setPage }) {
         boxShadow: 'var(--shadow-modal)',
         padding: '36px 32px'
       }}>
-        {/* Header Login */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
             <Logo height="36px" style={{ borderRadius: '4px' }} />
@@ -79,7 +78,6 @@ export function LoginPage({ setPage }) {
           </div>
         )}
 
-        {/* Form Login */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
             <label className="zen-label">Username</label>
@@ -143,7 +141,6 @@ export function LoginPage({ setPage }) {
           </button>
         </form>
 
-        {/* Footer Back Link */}
         <div style={{ marginTop: '24px', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '16px' }}>
           <button
             onClick={() => setPage(ROUTE_PATHS.LANDING)}

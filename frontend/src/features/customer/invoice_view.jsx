@@ -41,7 +41,6 @@ export function InvoiceView({ setPage }) {
     const orderId = currentOrder?.order_id || currentOrder?.id || currentOrder?.orderId;
     if (!orderId) return;
 
-    // Polling function untuk auto-update status pesanan secara real-time
     const syncLatestOrder = async () => {
       try {
         const res = await getOrderById(orderId);
@@ -55,20 +54,16 @@ export function InvoiceView({ setPage }) {
             try {
               sessionStorage.setItem('ketsai_last_order', JSON.stringify(updated));
             } catch {
-              // ignore
             }
             return updated;
           });
         }
       } catch {
-        // silent polling catch
       }
     };
 
-    // Panggil segera saat halaman dimuat
     syncLatestOrder();
 
-    // Auto-update berkala setiap 3.5 detik agar perubahan dari staf langsung tampil
     const intervalId = setInterval(syncLatestOrder, 3500);
     return () => clearInterval(intervalId);
   }, []);
@@ -232,7 +227,6 @@ export function InvoiceView({ setPage }) {
 
   return (
     <div className="zen-container" style={{ padding: '24px 16px 48px' }}>
-      {/* Top Bar Actions (Hidden on Print) */}
       <div className="no-print" style={{
         display: 'flex',
         alignItems: 'center',
@@ -268,7 +262,6 @@ export function InvoiceView({ setPage }) {
         </button>
       </div>
 
-      {/* Invoice Card Container (With id="printable-invoice" for single page printing) */}
       <div
         id="printable-invoice"
         style={{
@@ -283,7 +276,6 @@ export function InvoiceView({ setPage }) {
           breakInside: 'avoid'
         }}
       >
-        {/* Header Invoice */}
         <div style={{
           padding: 'clamp(14px, 3vw, 20px) clamp(16px, 4vw, 24px)',
           borderBottom: '1px solid var(--border-subtle)',
@@ -307,7 +299,6 @@ export function InvoiceView({ setPage }) {
             </p>
           </div>
 
-          {/* Status Badge */}
           <div style={{ textAlign: 'right' }}>
             <div style={{
               display: 'inline-flex',
@@ -330,7 +321,6 @@ export function InvoiceView({ setPage }) {
           </div>
         </div>
 
-        {/* Informasi Pelanggan & Pengiriman */}
         <div style={{
           padding: 'clamp(14px, 3vw, 18px) clamp(16px, 4vw, 24px)',
           borderBottom: '1px solid var(--border-subtle)',
@@ -383,7 +373,6 @@ export function InvoiceView({ setPage }) {
           </div>
         </div>
 
-        {/* Rincian Menu Pesanan */}
         <div style={{ padding: '16px 24px' }}>
           <h3 style={{ fontSize: '13px', fontWeight: 700, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Rincian Hidangan
@@ -438,7 +427,6 @@ export function InvoiceView({ setPage }) {
             })}
           </div>
 
-          {/* Kalkulasi Total Tagihan */}
           <div style={{
             marginTop: '16px',
             paddingTop: '12px',
@@ -460,7 +448,6 @@ export function InvoiceView({ setPage }) {
             </span>
           </div>
 
-          {/* Banner Aksi Pembayaran Midtrans jika belum lunas (Hidden on Print) */}
           {!isPaid && (
             <div className="no-print" style={{
               marginTop: '18px',

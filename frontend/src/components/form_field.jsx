@@ -1,6 +1,3 @@
-/**
- * Pembungkus field formulir standar Ketsai Zen Design System
- */
 export function FormField({
   label,
   required = false,

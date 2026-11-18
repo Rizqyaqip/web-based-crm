@@ -6,7 +6,6 @@ const { testConnection, closePool } = require('./database');
 const PORT = envConfig.port || envConfig.PORT || 5000;
 const server = http.createServer(app);
 
-// Jalankan Server & Uji Koneksi Database
 async function startServer() {
   const isDbConnected = await testConnection();
   if (!isDbConnected) {
@@ -26,7 +25,6 @@ async function startServer() {
   });
 }
 
-// Graceful Shutdown Handler
 async function gracefulShutdown(signal) {
   console.log(`\n Sinyal ${signal} diterima. Memulai proses graceful shutdown...`);
   
@@ -37,7 +35,6 @@ async function gracefulShutdown(signal) {
     process.exit(0);
   });
 
-  // Timeout paksa jika penutupan memakan waktu terlalu lama (> 10 detik)
   setTimeout(() => {
     console.error(' Waktu graceful shutdown habis, mematikan proses secara paksa.');
     process.exit(1);

@@ -55,7 +55,7 @@ class AuthService {
   }
 
   async updateUser(id, data = {}) {
-    await this.getUserById(id); // Memastikan ada
+    await this.getUserById(id);
     const updated = await authRepository.updateUser(id, data);
     if (!updated) {
       throw new BadRequestError('Tidak ada data yang diperbarui');
@@ -64,7 +64,7 @@ class AuthService {
   }
 
   async deleteUser(id) {
-    await this.getUserById(id); // Memastikan ada
+    await this.getUserById(id);
     try {
       await authRepository.deleteUserById(id);
     } catch (err) {

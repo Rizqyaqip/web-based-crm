@@ -4,7 +4,6 @@ import { getProducts, getProductCategories, formatIDR } from '../../services/api
 import { useCart } from '../../context/cart_context';
 import { useDebounce } from '../../hooks';
 
-// Kartu Produk Terisolasi (State Colocation & Memoized) agar pengubahan kuantitas tidak me-re-render seluruh katalog
 const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCart }) {
   const [qty, setQty] = useState(1);
   const currentStock = Number(product.jumlah_stok !== undefined ? product.jumlah_stok : product.jumlahStok) || 0;
@@ -28,7 +27,6 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
         opacity: isOutOfStock ? 0.75 : 1
       }}
     >
-      {/* Gambar Produk */}
       <div
         style={{
           position: 'relative',
@@ -67,7 +65,6 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
           }}
         />
 
-        {/* Badge Kategori */}
         <span
           style={{
             position: 'absolute',
@@ -87,7 +84,6 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
           {product.kategori}
         </span>
 
-        {/* Badge Status Stok (< 15 atau habis) */}
         {(isOutOfStock || isLowStock) && (
           <div style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
             {isOutOfStock ? (
@@ -99,7 +95,6 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
         )}
       </div>
 
-      {/* Informasi & Aksi */}
       <div
         style={{
           padding: '18px',
@@ -142,7 +137,6 @@ const CatalogProductCard = memo(function CatalogProductCard({ product, onAddToCa
           </p>
         </div>
 
-        {/* Pengatur Kuantitas & Tombol Pesan */}
         <div style={{ marginTop: '16px', display: 'flex', gap: '8px', alignItems: 'center' }}>
           {!isOutOfStock && (
             <div
@@ -205,7 +199,6 @@ export function CatalogPage() {
 
   const { addToCart, totalItems, totalPrice, setIsCartOpen, setIsCheckoutModalOpen } = useCart();
 
-  // Debounce search agar kalkulasi filter tidak memberatkan browser pada setiap keystroke
   const debouncedSearch = useDebounce(searchQuery, 250);
 
   const fetchProductList = useCallback(async (options = {}) => {
@@ -240,12 +233,10 @@ export function CatalogPage() {
     return () => controller.abort();
   }, [fetchProductList]);
 
-  // Handler add to cart stabil untuk anak komponen memoized
   const handleAddToCart = useCallback((product, qty) => {
     addToCart(product, qty);
   }, [addToCart]);
 
-  // Filter produk dengan useMemo (hanya dihitung ulang saat dependencies berubah)
   const filteredProducts = useMemo(() => {
     const query = debouncedSearch.trim().toLowerCase();
     return products.filter((item) => {
@@ -260,7 +251,6 @@ export function CatalogPage() {
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(24px, 4vw, 40px) clamp(16px, 4vw, 24px) 110px' }}>
-      {/* Header & Tagline */}
       <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto clamp(24px, 4vw, 36px)' }}>
         <h1 style={{ fontSize: 'clamp(24px, 5vw, 32px)', margin: '8px 0 10px' }}>
           Behold Our Product!
@@ -270,7 +260,6 @@ export function CatalogPage() {
         </p>
       </div>
 
-      {/* Filter Bar & Search */}
       <div
         style={{
           display: 'flex',
@@ -281,7 +270,6 @@ export function CatalogPage() {
           marginBottom: '28px'
         }}
       >
-        {/* Category Pills with Smooth Touch Swipe */}
         <div className="scrollable-tabs" style={{ gap: '8px', maxWidth: '100%' }}>
           {categories.map((cat) => (
             <button
@@ -307,7 +295,6 @@ export function CatalogPage() {
           ))}
         </div>
 
-        {/* Search Input */}
         <div style={{ position: 'relative', width: '100%', maxWidth: '280px' }}>
           <Search
             size={16}
@@ -330,7 +317,6 @@ export function CatalogPage() {
         </div>
       </div>
 
-      {/* Product Grid Content */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-muted)' }}>
           <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 16px', opacity: 0.6 }} />
@@ -381,7 +367,6 @@ export function CatalogPage() {
         </div>
       )}
 
-      {/* Floating Bottom Cart Bar (if items in cart) */}
       {totalItems > 0 && (
         <div
           className="floating-cart-bar"

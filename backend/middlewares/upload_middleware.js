@@ -3,7 +3,6 @@ const path = require('path');
 const { ensureCategoryDirectory, getCategoryFolderName, toCamelCase } = require('../utils/category_utils');
 const { BadRequestError } = require('../utils/app_error');
 
-// Konfigurasi penyimpanan disk multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     try {
@@ -49,7 +48,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// Validasi tipe file
 const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
   const ext = path.extname(file.originalname).toLowerCase();
@@ -72,7 +70,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // Maksimal 5 MB
+    fileSize: 5 * 1024 * 1024
   }
 });
 

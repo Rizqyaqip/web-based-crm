@@ -9,10 +9,9 @@ export function ManageStaff({ setPage }) {
 
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
+  const [modalMode, setModalMode] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
 
-  // Form State
   const [formData, setFormData] = useState({
     nama: '',
     password: '',
@@ -21,7 +20,6 @@ export function ManageStaff({ setPage }) {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
 
-  // Access Guard
   if (!isAdmin) {
     return (
       <div style={{ maxWidth: '520px', margin: '60px auto', textAlign: 'center' }}>
@@ -123,7 +121,6 @@ export function ManageStaff({ setPage }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Top Bar with Add Button */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -135,7 +132,6 @@ export function ManageStaff({ setPage }) {
           </p>
         </div>
 
-        {/* Prominent Add New Staff Button at top right */}
         <button
           onClick={handleOpenAdd}
           className="zen-btn-primary"
@@ -146,7 +142,6 @@ export function ManageStaff({ setPage }) {
         </button>
       </div>
 
-      {/* Staff Table */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
@@ -223,7 +218,6 @@ export function ManageStaff({ setPage }) {
         )}
       </div>
 
-      {/* MODAL: ADD / EDIT STAFF */}
       <Modal
         isOpen={Boolean(modalMode)}
         onClose={() => !formLoading && setModalMode(null)}

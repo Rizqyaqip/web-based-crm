@@ -11,7 +11,6 @@ const allowedOrigins = [
 
 const corsConfig = {
   origin: (origin, callback) => {
-    // Izinkan request tanpa origin (seperti curl, mobile apps, atau internal server-to-server)
     if (!origin) {
       return callback(null, true);
     }

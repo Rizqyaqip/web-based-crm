@@ -28,13 +28,11 @@ export function CartDrawer() {
       backdropFilter: 'blur(4px)',
       transition: 'all 0.3s ease'
     }}>
-      {/* Backdrop click to close */}
       <div 
         onClick={() => setIsCartOpen(false)}
         style={{ position: 'absolute', inset: 0 }} 
       />
 
-      {/* Drawer content */}
       <div style={{
         position: 'relative',
         width: '100%',
@@ -47,7 +45,6 @@ export function CartDrawer() {
         zIndex: 101,
         borderLeft: '1px solid var(--border-subtle)'
       }}>
-        {/* Drawer Header */}
         <div style={{
           padding: 'clamp(14px, 3vw, 20px) clamp(16px, 4vw, 24px)',
           borderBottom: '1px solid var(--border-subtle)',
@@ -76,7 +73,6 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {/* Item List */}
         <div style={{
           flex: 1,
           overflowY: 'auto',
@@ -112,7 +108,6 @@ export function CartDrawer() {
                   border: '1px solid var(--border-card)'
                 }}
               >
-                {/* Image */}
                 {(() => {
                   const isCartKetsai = item.kategori?.toLowerCase().includes('ketsai') || item.gambar?.includes('ketsaiOriginal');
                   return (
@@ -149,7 +144,6 @@ export function CartDrawer() {
                   );
                 })()}
 
-                {/* Info */}
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
                     <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '2px', lineHeight: 1.3 }}>
@@ -160,7 +154,6 @@ export function CartDrawer() {
                     </span>
                   </div>
 
-                  {/* Quantity & Remove */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
                     <div style={{
                       display: 'flex',
@@ -202,7 +195,6 @@ export function CartDrawer() {
           )}
         </div>
 
-        {/* Drawer Footer */}
         {cartItems.length > 0 && (
           <div style={{
             padding: '20px 24px',

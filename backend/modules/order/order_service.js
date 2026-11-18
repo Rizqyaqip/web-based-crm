@@ -12,7 +12,6 @@ class OrderService {
     const items = payload.items;
     const userId = payload.user_id !== undefined ? payload.user_id : (payload.userId !== undefined ? payload.userId : null);
 
-    // 1. Validasi data checkout
     if (!namaCustomer || !noHp || !alamat) {
       throw new BadRequestError('Nama penerima, nomor telepon, dan alamat pengiriman wajib diisi');
     }
@@ -26,7 +25,6 @@ class OrderService {
     try {
       await conn.beginTransaction();
 
-      // 2. Verifikasi ketersediaan stok produk & kalkulasi total harga
       let totalHarga = 0;
       const verifiedItems = [];
 
@@ -59,7 +57,6 @@ class OrderService {
         });
       }
 
-      // 3. Masukkan pesanan
       const tanggalPesan = new Date();
       const initialStatus = (orderStatus && orderStatus.pending) || ORDER_STATUS.PENDING || 'Pending';
 
@@ -73,7 +70,6 @@ class OrderService {
         totalHarga
       });
 
-      // 4. Masukkan item pesanan, kurangi stok, dan catat log mutasi stok penjualan (operator dikosongkan)
       for (const item of verifiedItems) {
         await orderRepository.insertOrderItem(conn, {
           orderId,
@@ -86,15 +82,14 @@ class OrderService {
 
         await orderRepository.insertStockLog(conn, {
           productId: item.product_id,
-          userId: null, // Operator staf dikosongkan saat pengurangan stok dari penjualan
-          orderId,      // Relasi langsung ke transaksi pesanan
+          userId: null,
+          orderId,
           jumlah: item.jumlah,
           jenis: 'penjualan',
           tanggal: tanggalPesan
         });
       }
 
-      // 6. Buat pembayaran
       const paymentStatus = (metodePembayaran === 'Tunai' || metodePembayaran === 'COD')
         ? 'Menunggu Pembayaran saat COD'
         : 'Menunggu Pembayaran';
@@ -107,7 +102,6 @@ class OrderService {
         tanggalBayar: tanggalPesan
       });
 
-      // 7. Buat invoice resmi
       const invoiceId = await orderRepository.insertInvoice(conn, {
         orderId,
         tanggalCetak: tanggalPesan,
@@ -118,7 +112,6 @@ class OrderService {
 
       const invoiceNumber = `INV-KETSAI-${String(orderId).padStart(5, '0')}`;
 
-      // 8. Buat sesi transaksi Midtrans Snap
       let snapToken = null;
       let snapRedirectUrl = null;
       let midtransOrderId = null;
@@ -235,7 +228,6 @@ class OrderService {
       payment_type: paymentType
     } = payload;
 
-    // 1. Validasi keaslian payload dari Midtrans melalui SHA512 Signature Key
     const isValidSignature = midtransService.verifySignature({
       orderId: midtransOrderId,
       statusCode,
@@ -247,7 +239,6 @@ class OrderService {
       throw new BadRequestError('Signature key Midtrans tidak valid');
     }
 
-    // 2. Ekstrak internal order_id (format: KETSAI-{orderId}-{timestamp})
     const match = String(midtransOrderId).match(/^KETSAI-(\d+)-/);
     const orderId = match ? Number(match[1]) : null;
 
@@ -260,13 +251,11 @@ class OrderService {
       throw new NotFoundError(`Pesanan ID ${orderId} tidak ditemukan`);
     }
 
-    // 3. Petakan status transaksi Midtrans ke status internal sistem Ketsai
     const { paymentStatus, orderStatus: newOrderStatus } = midtransService.mapTransactionStatus(
       transactionStatus,
       fraudStatus
     );
 
-    // 4. Update status pesanan dan status pembayaran
     await orderRepository.updateOrderStatus(orderId, newOrderStatus);
     await orderRepository.updatePaymentStatusByOrderId(orderId, paymentStatus);
 
@@ -319,7 +308,6 @@ class OrderService {
       return order;
     }
 
-    // Periksa status ke Midtrans API
     const candidates = [
       order.midtrans_order_id,
       `KETSAI-${orderId}`,

@@ -1,6 +1,3 @@
-/**
- * Komponen Card reusable Ketsai Zen Design System
- */
 export function Card({
   padding = 'md',
   hoverable = false,

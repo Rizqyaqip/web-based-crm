@@ -33,7 +33,6 @@ export function LandingPage({ setPage }) {
 
   return (
     <div>
-      {/* 1. HERO SECTION */}
       <section style={{
         position: 'relative',
         padding: 'clamp(40px, 6vw, 72px) clamp(16px, 4vw, 24px) clamp(48px, 6vw, 80px)',
@@ -48,7 +47,6 @@ export function LandingPage({ setPage }) {
           gap: 'clamp(32px, 5vw, 48px)',
           alignItems: 'center'
         }}>
-          {/* Hero Left Content */}
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
             </div>
@@ -95,7 +93,6 @@ export function LandingPage({ setPage }) {
               </button>
             </div>
 
-            {/* Micro Highlights */}
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -127,7 +124,6 @@ export function LandingPage({ setPage }) {
             </div>
           </div>
 
-          {/* Hero Right Media - Real Dynamic Top Product from Database */}
           <div style={{ position: 'relative' }}>
             <div style={{
               position: 'relative',
@@ -240,7 +236,6 @@ export function LandingPage({ setPage }) {
         </div>
       </section>
 
-      {/* 2. SIGNATURE DISHES / BEST SELLERS - 100% REAL FROM DATABASE */}
       <section style={{ padding: 'clamp(40px, 6vw, 64px) clamp(16px, 4vw, 24px)', maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{
           display: 'flex',
@@ -275,7 +270,6 @@ export function LandingPage({ setPage }) {
           </button>
         </div>
 
-        {/* Best Sellers Grid - Real Data */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
             <RefreshCw size={32} className="animate-spin" style={{ margin: '0 auto 12px' }} />
@@ -338,7 +332,6 @@ export function LandingPage({ setPage }) {
                       }}
                     />
 
-                    {/* Category Chip */}
                     <span style={{
                       position: 'absolute',
                       top: '12px',
@@ -356,7 +349,6 @@ export function LandingPage({ setPage }) {
                       {item.kategori}
                     </span>
 
-                    {/* Sales Badge */}
                     <span style={{
                       position: 'absolute',
                       top: '12px',
@@ -447,7 +439,6 @@ export function LandingPage({ setPage }) {
         )}
       </section>
 
-      {/* 3. PHILOSOPHY & VALUES SECTION */}
       <section id="story-section" style={{
         backgroundColor: 'var(--bg-card)',
         padding: 'clamp(44px, 6vw, 72px) clamp(16px, 4vw, 24px)',
@@ -548,7 +539,6 @@ export function LandingPage({ setPage }) {
         </div>
       </section>
 
-      {/* 4. FAST CTA CALLOUT */}
       <section style={{ padding: 'clamp(36px, 5vw, 60px) clamp(16px, 4vw, 24px)', textAlign: 'center' }}>
         <div style={{
           maxWidth: '800px',

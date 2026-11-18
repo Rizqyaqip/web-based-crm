@@ -195,7 +195,6 @@ class OrderRepository {
         'UPDATE orders SET status = ?, user_id = ? WHERE id = ?',
         [status, staffId, id]
       );
-      // Perbarui juga operator staf pada catatan mutasi stok terkait pesanan ini
       await pool.query(
         'UPDATE stock_logs SET user_id = ? WHERE order_id = ?',
         [staffId, id]

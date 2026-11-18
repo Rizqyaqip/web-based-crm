@@ -41,9 +41,14 @@ frontend/.env
 
 # Dependencies & Package Manager
 node_modules/
+/package.json
+/package-lock.json
 package-lock.json.bak
 yarn.lock.bak
 pnpm-lock.yaml.bak
+
+# Agent Skills & Lockfiles
+skills-lock.json
 
 # Build & Compiled Output
 dist/
@@ -70,4 +75,5 @@ temp/
 # Berkas Dokumentasi & Konfigurasi Git (Abaikan pelacakan git)
 DOCUMENTATION.md
 documentation.md
+doc/
 .gitignore

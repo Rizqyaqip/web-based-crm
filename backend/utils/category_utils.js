@@ -1,15 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-/**
- * Mengonversi nama kategori menjadi nama direktori (camelCase)
- * Contoh:
- * - "ketsai original" -> "ketsaiOriginal"
- * - "frozen food"     -> "frozenFood"
- * - "ice cream"       -> "iceCream"
- * - "Minuman Segar"   -> "minumanSegar"
- * - "Aneka Saus"      -> "anekaSaus"
- */
 function getCategoryFolderName(categoryName) {
   if (!categoryName || typeof categoryName !== 'string') {
     return 'ketsaiOriginal';
@@ -18,7 +9,6 @@ function getCategoryFolderName(categoryName) {
   const clean = categoryName.trim();
   const lower = clean.toLowerCase();
 
-  // Pemetaan khusus untuk kategori yang sudah ada
   if (lower === 'ketsai original' || lower === 'ketsai' || lower === 'ketsaioriginal') {
     return 'ketsaiOriginal';
   }
@@ -29,7 +19,6 @@ function getCategoryFolderName(categoryName) {
     return 'iceCream';
   }
 
-  // Format camelCase untuk kategori baru
   const words = clean
     .replace(/[^a-zA-Z0-9\s_-]/g, '')
     .split(/[\s_-]+/)
@@ -46,10 +35,6 @@ function getCategoryFolderName(categoryName) {
     .join('');
 }
 
-/**
- * Memastikan direktori kategori ada di folder frontend/src/assets/
- * Jika belum ada, otomatis dibuat.
- */
 function ensureCategoryDirectory(categoryName) {
   const folderName = getCategoryFolderName(categoryName);
   const baseAssetsDir = path.resolve(__dirname, '../../frontend/src/assets');
@@ -67,13 +52,6 @@ function ensureCategoryDirectory(categoryName) {
   };
 }
 
-/**
- * Mengonversi teks (nama produk) menjadi camelCase bersih untuk penamaan file
- * Contoh:
- * - "Seoul Lychee Yoghurt" -> "seoulLycheeYoghurt"
- * - "dimsum" -> "dimsum"
- * - "Edo Fish Ball (250 gr)" -> "edoFishBall250Gr"
- */
 function toCamelCase(str) {
   if (!str || typeof str !== 'string') return 'produk';
 

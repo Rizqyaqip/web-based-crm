@@ -4,7 +4,6 @@ const productService = require('./product_service');
 const { sendSuccess, BadRequestError, ensureCategoryDirectory, getCategoryFolderName, toCamelCase } = require('../../utils');
 const { httpStatusCodes, HTTP_STATUS } = require('../../constants');
 
-
 class ProductController {
   async getAll(req, res) {
     const { search, kategori, limit } = req.query;
@@ -49,7 +48,6 @@ class ProductController {
     const folderInfo = ensureCategoryDirectory(kategori);
     const folderName = folderInfo.folderName;
 
-    // Tentukan nama file target dalam format camelCase sesuai nama produk
     const rawProductName =
       req.body.nama_produk ||
       req.query.nama_produk ||
@@ -66,7 +64,6 @@ class ProductController {
       targetFileName = `${camelName}${ext}`;
     }
 
-    // Pastikan lokasi fisik dan nama file sesuai di folder target
     const currentFilePath = req.file.path;
     const targetFilePath = path.join(folderInfo.absolutePath, targetFileName);
 
@@ -98,7 +95,6 @@ class ProductController {
     });
   }
 
-
   async getById(req, res) {
     const { id } = req.params;
     const product = await productService.getProductById(id);
@@ -107,7 +103,6 @@ class ProductController {
   }
 
   async create(req, res) {
-    // Pastikan direktori kategori dibuat di assets jika ada kategori
     if (req.body && req.body.kategori) {
       try {
         ensureCategoryDirectory(req.body.kategori);
@@ -142,12 +137,10 @@ class ProductController {
     try {
       existingProduct = await productService.getProductById(id);
     } catch (e) {
-      // Produk mungkin sudah tidak ada
     }
 
     const result = await productService.deleteProduct(id);
 
-    // Hapus file gambar kustom dari assets jika bukan gambar bawaan default
     if (existingProduct && existingProduct.gambar && existingProduct.gambar.startsWith('/src/assets/')) {
       try {
         const assetsBase = path.resolve(__dirname, '../../../frontend');
@@ -178,7 +171,6 @@ class ProductController {
     return sendSuccess(res, status, `Produk dengan ID ${id} berhasil dihapus`, result);
   }
 }
-
 
 module.exports = new ProductController();
 

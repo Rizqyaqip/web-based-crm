@@ -1,4 +1,3 @@
-// Global application constants for Ketsai UMKM Web App
 
 export const APP_NAME = 'KETSAI';
 export const APP_TAGLINE = 'Artisanal Delicacies & Frozen Treats';

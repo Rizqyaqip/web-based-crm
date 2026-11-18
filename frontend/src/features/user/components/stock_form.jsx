@@ -70,7 +70,6 @@ export const StockForm = memo(function StockForm({
         <h2 style={{ fontSize: '18px', margin: 0 }}>Formulir Input Stok</h2>
       </div>
 
-      {/* Feedback Notifikasi */}
       {statusFeedback && (
         <div style={{
           padding: '12px 16px',
@@ -101,9 +100,6 @@ export const StockForm = memo(function StockForm({
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-        {/* ---------------------------------------------------- */}
-        {/* TAHAP 1: KATEGORI                                   */}
-        {/* ---------------------------------------------------- */}
         <div style={{
           padding: '16px',
           backgroundColor: 'var(--bg-primary)',
@@ -183,9 +179,6 @@ export const StockForm = memo(function StockForm({
           )}
         </div>
 
-        {/* ---------------------------------------------------- */}
-        {/* TAHAP 2: JENIS PRODUK & UPLOAD GAMBAR                */}
-        {/* ---------------------------------------------------- */}
         <div style={{
           padding: '16px',
           backgroundColor: 'var(--bg-primary)',
@@ -237,7 +230,6 @@ export const StockForm = memo(function StockForm({
             )}
           </div>
 
-          {/* A. Opsi Produk Eksisting */}
           {productMode === 'existing' && categoryMode === 'existing' ? (
             <div>
               {productsInSelectedCategory.length > 0 ? (
@@ -256,7 +248,6 @@ export const StockForm = memo(function StockForm({
                     ))}
                   </select>
 
-                  {/* Mini Pratinjau Produk Terpilih */}
                   {selectedProduct && (
                     <div style={{
                       marginTop: '12px',
@@ -320,7 +311,6 @@ export const StockForm = memo(function StockForm({
                     </div>
                   )}
 
-                  {/* Tombol opsi upload/update foto untuk produk eksisting */}
                   <div style={{ marginTop: '10px' }}>
                     {!showUploadForExisting ? (
                       <button
@@ -395,7 +385,6 @@ export const StockForm = memo(function StockForm({
               )}
             </div>
           ) : (
-            /* B. Opsi Buat Produk Baru */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -446,7 +435,6 @@ export const StockForm = memo(function StockForm({
                 />
               </div>
 
-              {/* FIELD UPLOAD GAMBAR PRODUK BARU */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                   <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -468,7 +456,6 @@ export const StockForm = memo(function StockForm({
                   onDrop={handleDrop}
                 />
 
-                {/* Preset fallback jika tidak upload gambar */}
                 {!imageFile && (
                   <div style={{ marginTop: '8px' }}>
                     <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
@@ -495,9 +482,6 @@ export const StockForm = memo(function StockForm({
           )}
         </div>
 
-        {/* ---------------------------------------------------- */}
-        {/* TAHAP 3: JUMLAH STOK INPUT                           */}
-        {/* ---------------------------------------------------- */}
         <div style={{
           padding: '16px',
           backgroundColor: 'var(--bg-primary)',
@@ -524,7 +508,6 @@ export const StockForm = memo(function StockForm({
             />
           </div>
 
-          {/* Quick Increment Buttons */}
           <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
             {[5, 10, 20, 50, 100].map((addVal) => (
               <button
@@ -547,7 +530,6 @@ export const StockForm = memo(function StockForm({
             ))}
           </div>
 
-          {/* Ringkasan Kalkulasi Real-time */}
           <div style={{
             marginTop: '12px',
             padding: '10px 14px',
@@ -572,13 +554,11 @@ export const StockForm = memo(function StockForm({
           </div>
         </div>
 
-        {/* INFO OPERATOR */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
           <span>Operator Gudang/Dapur:</span>
           <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user?.nama || 'Staf Operasional'}</span>
         </div>
 
-        {/* SUBMIT BUTTON */}
         <button
           type="submit"
           disabled={isSubmitting}

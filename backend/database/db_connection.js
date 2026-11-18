@@ -2,7 +2,6 @@ const mysql = require('mysql2/promise');
 const { envConfig } = require('../config');
 const { seedDatabaseDefaults } = require('./seed_data');
 
-// Inisialisasi pool koneksi MySQL2
 const pool = mysql.createPool({
   host: envConfig.db.host || envConfig.DB.HOST,
   port: envConfig.db.port || envConfig.DB.PORT,
@@ -24,7 +23,6 @@ async function testConnection() {
     console.log(`[DB] Berhasil terhubung ke database MySQL [${dbName}] pada port ${dbPort}`);
     connection.release();
 
-    // Jalankan seeding otomatis jika data kosong
     await seedDatabaseDefaults(pool);
     return true;
   } catch (error) {

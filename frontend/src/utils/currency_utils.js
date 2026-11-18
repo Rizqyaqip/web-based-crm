@@ -1,4 +1,3 @@
-// Currency utility formatter for Indonesian Rupiah (IDR)
 
 export function formatIdr(number) {
   const validNumber = Number(number) || 0;
@@ -10,5 +9,4 @@ export function formatIdr(number) {
   }).format(validNumber);
 }
 
-// Aliases for camelCase
 export const formatIDR = formatIdr;

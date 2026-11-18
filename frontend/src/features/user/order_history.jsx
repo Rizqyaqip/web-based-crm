@@ -14,13 +14,11 @@ export function OrderHistory() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
-  // Selected Order Modal
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   const statusOptions = ['Semua', 'Pending', 'Diproses', 'Dikirim', 'Selesai', 'Dibatalkan'];
 
-  // Debounce search query untuk optimasi pencarian instan
   const debouncedSearch = useDebounce(searchQuery, 250);
 
   const fetchOrderList = useCallback(async (options = {}) => {
@@ -63,7 +61,6 @@ export function OrderHistory() {
     setSearchQuery('');
   };
 
-  // Cek status apakah sedang dalam filter view
   const isFiltered = Boolean(
     startDate ||
     endDate ||
@@ -71,7 +68,6 @@ export function OrderHistory() {
     searchQuery.trim()
   );
 
-  // Client-side filtering untuk pencarian instan dan akurasi tampilan
   const displayedOrders = useMemo(() => {
     return orders.filter((order) => {
       if (statusFilter !== 'Semua' && order.status !== statusFilter) return false;
@@ -94,7 +90,6 @@ export function OrderHistory() {
     });
   }, [orders, statusFilter, debouncedSearch, startDate, endDate]);
 
-  // Ringkasan metrik untuk laporan
   const summaryMetrics = useMemo(() => {
     let totalNilai = 0;
     let countSelesai = 0;
@@ -107,7 +102,6 @@ export function OrderHistory() {
     return { totalNilai, countSelesai, countPending };
   }, [displayedOrders]);
 
-  // Handler cetak ke PDF
   const handlePrintPdf = () => {
     const filterDescParts = [];
     if (startDate || endDate) {
@@ -205,7 +199,6 @@ export function OrderHistory() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus, user);
-      // Refresh state
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: newStatus, staff_nama: user?.nama || o.staff_nama } : o))
       );
@@ -230,9 +223,7 @@ export function OrderHistory() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Search & Filter Toolbar */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 20px)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Row 1: Status Filter Buttons & Active Badge */}
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Filter size={18} color="var(--accent-vermilion)" />
@@ -268,7 +259,6 @@ export function OrderHistory() {
           </div>
         </div>
 
-        {/* Row 2: Date Filters, Search, Reset, Refresh */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -278,7 +268,6 @@ export function OrderHistory() {
           paddingTop: '12px',
           borderTop: '1px solid var(--border-subtle)'
         }}>
-          {/* Tanggal Mulai & Sampai */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Mulai:</span>
@@ -322,7 +311,6 @@ export function OrderHistory() {
             </button>
           </div>
 
-          {/* Search Bar */}
           <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', maxWidth: '340px', width: '100%', flex: '1 1 240px' }}>
             <div style={{ position: 'relative', flex: 1 }}>
               <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -342,7 +330,6 @@ export function OrderHistory() {
         </div>
       </div>
 
-      {/* Orders Table */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
         <div style={{ marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div>
@@ -455,7 +442,7 @@ export function OrderHistory() {
                       </td>
                       <td 
                         style={{ padding: '14px', textAlign: 'right' }}
-                        onClick={(e) => e.stopPropagation()} // Hindari trigger row click saat ganti dropdown
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <select
                           value={order.status}
@@ -484,7 +471,6 @@ export function OrderHistory() {
         )}
       </div>
 
-      {/* MODAL DETAIL INVOICE (Clicking row opens modal) */}
       {selectedOrder && (
         <div style={{
           position: 'fixed',
@@ -515,7 +501,6 @@ export function OrderHistory() {
             zIndex: 151,
             padding: '36px'
           }}>
-            {/* Modal Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -539,7 +524,6 @@ export function OrderHistory() {
 
             <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', marginBottom: '20px' }} />
 
-            {/* Customer Info Card */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -584,7 +568,6 @@ export function OrderHistory() {
               </div>
             </div>
 
-            {/* Ordered Items Table */}
             <h4 style={{ fontSize: '15px', marginBottom: '12px' }}>Rincian Menu Dipesan</h4>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', marginBottom: '24px' }}>
               <thead>
@@ -609,7 +592,6 @@ export function OrderHistory() {
               </tbody>
             </table>
 
-            {/* Total */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -625,7 +607,6 @@ export function OrderHistory() {
               </span>
             </div>
 
-            {/* Quick Status Modifier & Print Button */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>Update Status:</span>

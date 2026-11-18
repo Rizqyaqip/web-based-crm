@@ -1,4 +1,3 @@
-// Master API barrel export for Ketsai Frontend (snake_case modular architecture)
 
 export * from './api_client';
 export * from './product_service';

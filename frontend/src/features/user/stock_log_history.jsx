@@ -49,7 +49,6 @@ export function StockLogHistory() {
     setTypeFilter('Semua');
   };
 
-  // Filter client-side untuk pencarian dan tipe mutasi
   const displayedLogs = useMemo(() => {
     return logs.filter((log) => {
       if (typeFilter !== 'Semua' && log.jenis !== typeFilter) return false;
@@ -64,7 +63,6 @@ export function StockLogHistory() {
     });
   }, [logs, typeFilter, debouncedSearch]);
 
-  // Cek apakah saat ini sedang dalam filter view
   const isFiltered = Boolean(
     startDate ||
     endDate ||
@@ -72,7 +70,6 @@ export function StockLogHistory() {
     searchQuery.trim()
   );
 
-  // Hitung total mutasi untuk ringkasan
   const summaryMetrics = useMemo(() => {
     let totalMasuk = 0;
     let totalKeluar = 0;
@@ -84,7 +81,6 @@ export function StockLogHistory() {
     return { totalMasuk, totalKeluar };
   }, [displayedLogs]);
 
-  // Handler cetak ke PDF
   const handlePrintPdf = () => {
     const filterDescParts = [];
     if (startDate || endDate) {
@@ -165,7 +161,6 @@ export function StockLogHistory() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Search & Filter Toolbar */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 20px)' }}>
         <div style={{
           display: 'flex',
@@ -185,7 +180,6 @@ export function StockLogHistory() {
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
-            {/* Search Input */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative', flex: '1 1 180px' }}>
               <input
                 type="text"
@@ -197,7 +191,6 @@ export function StockLogHistory() {
               />
             </div>
 
-            {/* Jenis Mutasi Select */}
             <select
               className="zen-input"
               value={typeFilter}
@@ -209,7 +202,6 @@ export function StockLogHistory() {
               <option value="keluar">Penjualan</option>
             </select>
 
-            {/* Rentang Tanggal */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Mulai:</span>
               <input
@@ -254,7 +246,6 @@ export function StockLogHistory() {
         </div>
       </div>
 
-      {/* Stock Logs Data Table */}
       <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
         <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <div>

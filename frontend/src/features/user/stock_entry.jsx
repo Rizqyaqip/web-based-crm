@@ -18,9 +18,6 @@ import {
   EditProductModal
 } from './components';
 
-/**
- * Konversi nama kategori menjadi nama folder camelCase
- */
 function getPredictedFolderName(categoryName) {
   if (!categoryName || typeof categoryName !== 'string') return 'ketsaiOriginal';
   const clean = categoryName.trim();
@@ -45,21 +42,17 @@ export function StockEntry({ setPage }) {
   const formRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Core Data
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusFeedback, setStatusFeedback] = useState(null);
 
-  // Form State (Berjenjang)
-  // Step 1: Kategori
-  const [categoryMode, setCategoryMode] = useState('existing'); // 'existing' | 'new'
+  const [categoryMode, setCategoryMode] = useState('existing');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [newCategoryName, setNewCategoryName] = useState('');
 
-  // Step 2: Produk
-  const [productMode, setProductMode] = useState('existing'); // 'existing' | 'new'
+  const [productMode, setProductMode] = useState('existing');
   const [selectedProductId, setSelectedProductId] = useState('');
   const [newProductData, setNewProductData] = useState({
     nama_produk: '',
@@ -68,25 +61,20 @@ export function StockEntry({ setPage }) {
     gambar: ''
   });
 
-  // Image Upload State
   const [imageFile, setImageFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showUploadForExisting, setShowUploadForExisting] = useState(false);
 
-  // Step 3: Jumlah Stok
   const [quantityAdded, setQuantityAdded] = useState(10);
 
-  // Product Cards Filter & Search State
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('Semua');
-  const [stockLevelFilter, setStockLevelFilter] = useState('all'); // 'all' | 'low' | 'out' | 'safe'
+  const [stockLevelFilter, setStockLevelFilter] = useState('all');
 
-  // Edit & Delete Product Modal State
   const [editingProduct, setEditingProduct] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // Fetch initial data
   const fetchData = useCallback(async (options = {}) => {
     try {
       setIsFetching(true);
@@ -134,7 +122,6 @@ export function StockEntry({ setPage }) {
     return () => controller.abort();
   }, [fetchData]);
 
-  // Filter produk berdasarkan kategori yang sedang dipilih di form
   const productsInSelectedCategory = useMemo(() => {
     if (!selectedCategory) return [];
     return products.filter(
@@ -142,7 +129,6 @@ export function StockEntry({ setPage }) {
     );
   }, [products, selectedCategory]);
 
-  // Otomatis pilih produk pertama dalam kategori yang dipilih jika belum ada
   useEffect(() => {
     if (categoryMode === 'existing' && productMode === 'existing') {
       if (productsInSelectedCategory.length > 0) {
@@ -158,7 +144,6 @@ export function StockEntry({ setPage }) {
     }
   }, [selectedCategory, productsInSelectedCategory, categoryMode, productMode, selectedProductId]);
 
-  // Handler Ganti Kategori
   const handleCategoryChange = (valOrEvent) => {
     const cat = valOrEvent?.target ? valOrEvent.target.value : valOrEvent;
     setSelectedCategory(cat);
@@ -166,13 +151,11 @@ export function StockEntry({ setPage }) {
     handleClearImage();
   };
 
-  // Folder assets yang ditargetkan untuk upload gambar
   const activeCategoryFolder = useMemo(() => {
     const targetCat = categoryMode === 'new' ? newCategoryName : selectedCategory;
     return getPredictedFolderName(targetCat);
   }, [categoryMode, newCategoryName, selectedCategory]);
 
-  // Handler Upload Gambar
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -231,10 +214,8 @@ export function StockEntry({ setPage }) {
     setImagePreviewUrl(URL.createObjectURL(file));
   };
 
-  // Debounce search query untuk filter grid produk
   const debouncedSearchQuery = useDebounce(searchQuery, 200);
 
-  // Filter Card Produk
   const filteredProducts = useMemo(() => {
     const q = debouncedSearchQuery.trim().toLowerCase();
     return products.filter((item) => {
@@ -257,7 +238,6 @@ export function StockEntry({ setPage }) {
     });
   }, [products, debouncedSearchQuery, filterCategory, stockLevelFilter]);
 
-  // Statistik Stok
   const stats = useMemo(() => {
     const total = products.length;
     const outOfStock = products.filter((p) => (Number(p.jumlah_stok !== undefined ? p.jumlah_stok : p.jumlahStok) || 0) <= 0).length;
@@ -269,10 +249,8 @@ export function StockEntry({ setPage }) {
     return { total, outOfStock, lowStock, safeStock };
   }, [products]);
 
-  // Detail produk eksisting yang sedang dipilih pada form
   const selectedProduct = products.find((p) => String(p.id) === String(selectedProductId));
 
-  // Quick Action dari Card: Pilih produk langsung masuk ke form
   const handleQuickSelectProduct = (prod) => {
     setCategoryMode('existing');
     setSelectedCategory(prod.kategori || '');
@@ -286,7 +264,6 @@ export function StockEntry({ setPage }) {
     }
   };
 
-  // Handlers Edit & Hapus Produk via Popup Form
   const handleOpenEditModal = (prod) => {
     setEditingProduct(prod);
     setIsEditModalOpen(true);
@@ -348,7 +325,6 @@ export function StockEntry({ setPage }) {
     }
   };
 
-  // Submit Handler Form Input Stok
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatusFeedback(null);
@@ -509,7 +485,6 @@ export function StockEntry({ setPage }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      {/* PAGE HEADER */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
@@ -534,12 +509,9 @@ export function StockEntry({ setPage }) {
         </button>
       </div>
 
-      {/* METRIK STOK SUMMARY CARDS */}
       <StockMetrics stats={stats} />
 
-      {/* DUAL WORKSPACE: FORMULIR BERJENJANG (KIRI) & INFORMASI KARTU STOK (KANAN) */}
       <div className="stock-entry-grid">
-        {/* KOLOM KIRI: FORMULIR INPUT STOK BERJENJANG */}
         <StockForm
           formRef={formRef}
           fileInputRef={fileInputRef}
@@ -578,7 +550,6 @@ export function StockEntry({ setPage }) {
           handleSubmit={handleSubmit}
         />
 
-        {/* KOLOM KANAN: INFORMASI STOK MASING-MASING PRODUK (CARD) */}
         <StockProductGrid
           products={products}
           filteredProducts={filteredProducts}
@@ -597,7 +568,6 @@ export function StockEntry({ setPage }) {
         />
       </div>
 
-      {/* MODAL POPUP EDIT & HAPUS PRODUK */}
       <EditProductModal
         isOpen={isEditModalOpen}
         product={editingProduct}

@@ -1,6 +1,3 @@
-/**
- * Komponen Input, Textarea, dan Select terpusat Ketsai Zen Design System
- */
 export function Input({
   icon = null,
   hasError = false,

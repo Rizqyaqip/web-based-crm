@@ -19,7 +19,6 @@ export function Footer({ setPage }) {
         gap: 'clamp(24px, 4vw, 36px)',
         marginBottom: '32px'
       }}>
-        {/* Brand column */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
             <Logo height="34px" style={{ borderRadius: '4px' }} />
@@ -32,7 +31,6 @@ export function Footer({ setPage }) {
           </span>
         </div>
 
-        {/* Quick Links */}
         <div>
           <h4 style={{ fontSize: '15px', marginBottom: '14px', color: 'var(--text-primary)' }}>
             Navigasi Cepat
@@ -57,7 +55,6 @@ export function Footer({ setPage }) {
           </ul>
         </div>
 
-        {/* Operational hours & Location */}
         <div>
           <h4 style={{ fontSize: '15px', marginBottom: '14px', color: 'var(--text-primary)' }}>
             Jam Operasional
@@ -70,7 +67,6 @@ export function Footer({ setPage }) {
           </p>
         </div>
 
-        {/* Social Media & Customer Service */}
         <div>
           <h4 style={{ fontSize: '15px', marginBottom: '14px', color: 'var(--text-primary)' }}>
             Media Sosial & Layanan

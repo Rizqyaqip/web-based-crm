@@ -12,7 +12,6 @@ const httpStatusCodes = {
   internalServerError: 500,
   serviceUnavailable: 503,
 
-  // UpperCase aliases for standard HTTP conventions
   OK: 200,
   CREATED: 201,
   ACCEPTED: 202,

@@ -1,8 +1,5 @@
 import { Loader2 } from 'lucide-react';
 
-/**
- * Komponen Button standar Ketsai Zen Design System
- */
 export function Button({
   variant = 'primary',
   size = 'md',

@@ -32,7 +32,6 @@ export function DashboardOverview({ setPage }) {
     return () => controller.abort();
   }, [fetchStats]);
 
-  // Update optimistik lokal untuk menghindari query agregasi berat ke database secara berulang
   const handleQuickStatusChange = async (orderId, newStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus, user);
@@ -79,18 +78,15 @@ export function DashboardOverview({ setPage }) {
 
   const { kpis, weekly_sales, recent_orders } = stats;
 
-  // Kalkulasi bar chart scale
   const maxWeeklySales = Math.max(1, ...weekly_sales.map((d) => d.total));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      {/* 1. TOP-LEVEL KPI CARDS */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
         gap: '16px'
       }}>
-        {/* KPI 1: Total Sales Today */}
         <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)', position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
             <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -117,7 +113,6 @@ export function DashboardOverview({ setPage }) {
           </span>
         </div>
 
-        {/* KPI 2: Total Orders */}
         <div className="zen-card" style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
             <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
@@ -144,7 +139,6 @@ export function DashboardOverview({ setPage }) {
           </span>
         </div>
 
-        {/* KPI 3: Low Stock Alerts */}
         <div className="zen-card" style={{
           padding: 'clamp(16px, 3vw, 24px)',
           borderColor: kpis.low_stock_count > 0 ? 'var(--status-pending-border)' : 'var(--border-card)'
@@ -190,7 +184,6 @@ export function DashboardOverview({ setPage }) {
         </div>
       </div>
 
-      {/* 2. WEEKLY SALES BAR CHART SECTION */}
       <div className="zen-card" style={{ padding: 'clamp(18px, 3vw, 28px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div>
@@ -202,7 +195,6 @@ export function DashboardOverview({ setPage }) {
           <span className="hanko-stamp">GRAFIK MINGGUAN</span>
         </div>
 
-        {/* Minimalist Responsive Bar Chart */}
         <div style={{
           display: 'flex',
           alignItems: 'flex-end',
@@ -263,7 +255,6 @@ export function DashboardOverview({ setPage }) {
         </div>
       </div>
 
-      {/* 3. MINI-TABLE: RECENT ORDERS NEEDING ACTION */}
       <div className="zen-card" style={{ padding: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
           <div>

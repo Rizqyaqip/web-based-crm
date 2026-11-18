@@ -15,20 +15,14 @@ const PAGE_TITLES = {
   [ROUTE_PATHS.ADMIN_STAFF]: 'Ketsai Portal - Kelola Akun Staf'
 };
 
-/**
- * Mendapatkan identifier rute halaman dari window.location (pathname, hash)
- * atau fallback sessionStorage jika terjadi refresh browser.
- */
 export function getPageFromLocation() {
   if (typeof window === 'undefined') return ROUTE_PATHS.LANDING;
 
-  // 1. Ekstraksi dari Pathname (contoh: /catalog -> 'catalog', /admin-dashboard -> 'admin-dashboard')
   const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
   if (path && VALID_PAGES.includes(path)) {
     return path;
   }
 
-  // Handle nested path jika ada (misal /admin/dashboard -> 'admin-dashboard')
   if (path) {
     const hyphenated = path.replace(/\//g, '-');
     if (VALID_PAGES.includes(hyphenated)) {
@@ -36,7 +30,6 @@ export function getPageFromLocation() {
     }
   }
 
-  // 2. Ekstraksi dari Hash URL (contoh: #catalog, #/catalog)
   const hash = window.location.hash.replace(/^#\/?/, '').replace(/\/+$/, '');
   if (hash && VALID_PAGES.includes(hash)) {
     return hash;
@@ -48,7 +41,6 @@ export function getPageFromLocation() {
     }
   }
 
-  // 3. Fallback: sessionStorage saat reload jika pathname kosong ('/' atau '')
   try {
     const isReload =
       (window.performance?.getEntriesByType &&
@@ -68,47 +60,35 @@ export function getPageFromLocation() {
   return ROUTE_PATHS.LANDING;
 }
 
-/**
- * Mengubah route id menjadi URL path yang bersih
- */
 export function getUrlForPage(page) {
   if (page === ROUTE_PATHS.LANDING) return '/';
   return `/${page}`;
 }
 
-/**
- * Hook kustom untuk navigasi halaman SPA dengan persistensi refresh dan sinkronisasi URL history
- */
 export function usePageNavigation() {
   const [currentPage, setCurrentPage] = useState(() => getPageFromLocation());
 
-  // Sinkronkan judul tab dokumen
   const updateDocumentTitle = useCallback((page) => {
     if (PAGE_TITLES[page]) {
       document.title = PAGE_TITLES[page];
     }
   }, []);
 
-  // Inisialisasi awal saat mount
   useEffect(() => {
     const resolvedPage = getPageFromLocation();
     const targetUrl = getUrlForPage(resolvedPage);
 
-    // Update document title
     updateDocumentTitle(resolvedPage);
 
-    // Simpan ke sessionStorage untuk cadangan reload
     try {
       sessionStorage.setItem('ketsai_active_page', resolvedPage);
     } catch {}
 
-    // Sinkronkan URL jika belum sesuai
     if (window.location.pathname !== targetUrl && window.location.pathname !== targetUrl + '/') {
       window.history.replaceState({ page: resolvedPage }, '', targetUrl);
     }
   }, [updateDocumentTitle]);
 
-  // Listener untuk tombol Back / Forward browser (popstate)
   useEffect(() => {
     const handlePopState = (event) => {
       const targetPage = event.state?.page || getPageFromLocation();
@@ -124,7 +104,6 @@ export function usePageNavigation() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [updateDocumentTitle]);
 
-  // Fungsi navigasi utama
   const navigateToPage = useCallback(
     (newPage, options = {}) => {
       if (!newPage) return;

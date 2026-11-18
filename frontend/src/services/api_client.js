@@ -1,13 +1,8 @@
 import { API_BASE_URL } from '../config/api_config';
 
-// In-memory cache untuk request GET agar tidak membebani database
 const apiCache = new Map();
-const DEFAULT_CACHE_TTL = 45000; // 45 detik
+const DEFAULT_CACHE_TTL = 45000;
 
-/**
- * Membersihkan cache API.
- * @param {string|RegExp} [pattern] - Jika diberikan, hanya membersihkan endpoint yang cocok.
- */
 export function clearApiCache(pattern) {
   if (!pattern) {
     apiCache.clear();
@@ -22,9 +17,6 @@ export function clearApiCache(pattern) {
   }
 }
 
-/**
- * Client HTTP terpusat dengan dukungan in-memory cache, auto-invalidation, dan AbortController signal.
- */
 export async function request(endpoint, options = {}) {
   const {
     headers = {},
@@ -39,7 +31,6 @@ export async function request(endpoint, options = {}) {
   const defaultHeaders = isFormData ? {} : { 'Content-Type': 'application/json' };
   const method = (customConfig.method || (body ? 'POST' : 'GET')).toUpperCase();
 
-  // 1. Cek In-Memory Cache untuk GET request
   const cacheKey = `${method}:${endpoint}`;
   if (method === 'GET' && !skipCache) {
     const cached = apiCache.get(cacheKey);
@@ -64,7 +55,6 @@ export async function request(endpoint, options = {}) {
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-  // Parse JSON dengan penanganan respon kosong
   let data = null;
   const contentType = response.headers.get('content-type');
   if (contentType && contentType.includes('application/json')) {
@@ -82,7 +72,6 @@ export async function request(endpoint, options = {}) {
     throw new Error(data?.message || `Permintaan gagal dengan status ${response.status}`);
   }
 
-  // 2. Simpan cache jika GET berhasil
   if (method === 'GET' && !skipCache) {
     apiCache.set(cacheKey, {
       data,
@@ -91,8 +80,6 @@ export async function request(endpoint, options = {}) {
     });
   }
 
-  // 3. Auto Cache Invalidation untuk mutasi (POST, PUT, PATCH, DELETE)
-  // Menjamin UI selalu mendapatkan data paling mutakhir dari database setelah data diubah
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
     clearApiCache();
   }

@@ -53,7 +53,6 @@ class MidtransService {
       }
     };
 
-    // Pastikan item_details hanya dikirim jika jumlah total persis sama dengan gross_amount
     if (itemsSum === grossAmount && formattedItems.length > 0) {
       parameter.item_details = formattedItems;
     }
